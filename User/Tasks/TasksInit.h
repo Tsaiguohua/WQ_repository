@@ -5,6 +5,7 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "event_groups.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 // 任务统一初始化模块
@@ -42,6 +43,12 @@ extern TaskHandle_t CmdTaskHandle;
 
 /* 队列句柄（外部可引用） */
 extern QueueHandle_t xUartRxQueue;
+
+/* 系统事件组（用于任务间同步） */
+extern EventGroupHandle_t g_system_events;
+
+/* 事件位定义 */
+#define EVT_HW_INIT_DONE  (1 << 0)   /* 硬件初始化完成（含传感器自检+绑定） */
 
 /*============================================================================
  *                          API

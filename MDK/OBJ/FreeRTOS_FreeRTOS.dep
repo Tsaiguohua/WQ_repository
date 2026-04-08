@@ -1,5 +1,5 @@
 Dependencies for Project 'FreeRTOS', Target 'FreeRTOS': (DO NOT MODIFY !)
-F (..\APP\main.c)(0x69C201C8)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
+F (..\APP\main.c)(0x69CCC99F)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -45,13 +45,15 @@ I (..\Third_lib\FreeRTOS\include\portable.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\deprecated_definitions.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
-I (..\User\Tasks\TasksInit.h)(0x69C201C9)
+I (..\User\Tasks\TasksInit.h)(0x69CB77F3)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\event_groups.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\timers.h)(0x69C201C9)
 I (..\SYSTEM\delay\delay.h)(0x69C201C9)
-I (..\SYSTEM\Flash\flash.h)(0x69C201C9)
+I (..\SYSTEM\Flash\flash.h)(0x69CA6DDA)
 I (..\SYSTEM\IIC\iic.h)(0x69C201C9)
 I (..\Driver\LED\led.h)(0x69C201C8)
 I (..\Driver\OLED\oled.h)(0x69C201C8)
@@ -60,12 +62,12 @@ I (..\Third_lib\U8g2\u8x8.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdarg.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\limits.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\Driver\SelfExam\self_exam.h)(0x69C201C8)
+I (..\Driver\SelfExam\self_exam.h)(0x69CCC6F2)
 I (..\SYSTEM\uart4\uart4.h)(0x69C201C9)
 I (..\APP\app.h)(0x69C201C8)
 I (..\Driver\Watchdog\watchdog.h)(0x69C201C8)
 F (..\APP\version.c)(0x69C201C8)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\version.o --omf_browse .\obj\version.crf --depend .\obj\version.d)
-I (..\APP\version.h)(0x69C201C8)
+I (..\APP\version.h)(0x69CA0DD4)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdio.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
@@ -140,8 +142,8 @@ I (..\Firmware\driver\inc\stm32f4xx_can.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_dac.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_dcmi.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_fsmc.h)(0x69C201C8)
-F (..\User\Tasks\TasksInit.c)(0x69C202C6)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\tasksinit.o --omf_browse .\obj\tasksinit.crf --depend .\obj\tasksinit.d)
-I (..\User\Tasks\TasksInit.h)(0x69C201C9)
+F (..\User\Tasks\TasksInit.c)(0x69CB7810)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\tasksinit.o --omf_browse .\obj\tasksinit.crf --depend .\obj\tasksinit.d)
+I (..\User\Tasks\TasksInit.h)(0x69CB77F3)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -191,10 +193,12 @@ I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\event_groups.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\timers.h)(0x69C201C9)
 I (..\User\Tasks\HardwareInitTask.h)(0x69C201C9)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
 I (..\User\Tasks\UpLoadTask.h)(0x69C201C9)
 I (..\User\Tasks\TFTask.h)(0x69C201C9)
@@ -203,8 +207,8 @@ I (..\APP\app.h)(0x69C201C8)
 I (..\User\Tasks\CommandTask.h)(0x69C201C9)
 I (..\User\Tasks\OLEDTask.h)(0x69C201C9)
 I (..\User\Tasks\GPSTask.h)(0x69C201C9)
-I (..\User\Tasks\HeartBeatTask.h)(0x69C201C9)
-F (..\User\Tasks\HardwareInitTask.c)(0x69C21814)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\hardwareinittask.o --omf_browse .\obj\hardwareinittask.crf --depend .\obj\hardwareinittask.d)
+I (..\User\Tasks\HeartBeatTask.h)(0x69CCD922)
+F (..\User\Tasks\HardwareInitTask.c)(0x69CC8F29)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\hardwareinittask.o --omf_browse .\obj\hardwareinittask.crf --depend .\obj\hardwareinittask.d)
 I (..\User\Tasks\HardwareInitTask.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
@@ -253,15 +257,20 @@ I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\Tasks\TasksInit.h)(0x69CB77F3)
+I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\event_groups.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\timers.h)(0x69C201C9)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\Driver\SelfExam\self_exam.h)(0x69C201C8)
+I (..\Driver\SelfExam\self_exam.h)(0x69CCC6F2)
 I (..\SYSTEM\uart4\uart4.h)(0x69C201C9)
 I (..\APP\app.h)(0x69C201C8)
 I (..\User\Tasks\GPSTask.h)(0x69C201C9)
-F (..\User\Tasks\AcqTask.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\acqtask.o --omf_browse .\obj\acqtask.crf --depend .\obj\acqtask.d)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
+F (..\User\Tasks\AcqTask.c)(0x69CC8828)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\acqtask.o --omf_browse .\obj\acqtask.crf --depend .\obj\acqtask.d)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -310,21 +319,24 @@ I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
+I (..\User\Tasks\TasksInit.h)(0x69CB77F3)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
-I (..\Driver\SelfExam\self_exam.h)(0x69C201C8)
+I (..\Third_lib\FreeRTOS\include\event_groups.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\timers.h)(0x69C201C9)
+I (..\Driver\SelfExam\self_exam.h)(0x69CCC6F2)
 I (..\User\Tasks\UpLoadTask.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdlib.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\string.h)(0x588B8344)
-F (..\User\Tasks\UpLoadTask.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\uploadtask.o --omf_browse .\obj\uploadtask.crf --depend .\obj\uploadtask.d)
+F (..\User\Tasks\UpLoadTask.c)(0x69CA6F29)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\uploadtask.o --omf_browse .\obj\uploadtask.crf --depend .\obj\uploadtask.d)
 I (..\User\Tasks\UpLoadTask.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (..\Third_lib\FreeRTOS\include\FreeRTOSConfig.h)(0x69C201C9)
@@ -374,7 +386,7 @@ I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\string.h)(0x588B8344)
-F (..\User\Tasks\CommandTask.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\commandtask.o --omf_browse .\obj\commandtask.crf --depend .\obj\commandtask.d)
+F (..\User\Tasks\CommandTask.c)(0x69CCC766)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\commandtask.o --omf_browse .\obj\commandtask.crf --depend .\obj\commandtask.d)
 I (..\User\Tasks\CommandTask.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
@@ -422,17 +434,19 @@ I (..\Third_lib\FreeRTOS\include\deprecated_definitions.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\User\Tasks\TasksInit.h)(0x69C201C9)
+I (..\User\Tasks\TasksInit.h)(0x69CB77F3)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\Third_lib\FreeRTOS\include\event_groups.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\timers.h)(0x69C201C9)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
 I (..\Driver\Buzzer\buzzer.h)(0x69C201C8)
-I (..\SYSTEM\Flash\flash.h)(0x69C201C9)
-I (..\Driver\SelfExam\self_exam.h)(0x69C201C8)
+I (..\SYSTEM\Flash\flash.h)(0x69CA6DDA)
+I (..\Driver\SelfExam\self_exam.h)(0x69CCC6F2)
 I (..\SYSTEM\uart4\uart4.h)(0x69C201C9)
 I (..\APP\app.h)(0x69C201C8)
 I (..\User\Tasks\UpLoadTask.h)(0x69C201C9)
@@ -443,7 +457,7 @@ I (..\User\Tasks\GPSTask.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (..\Third_lib\FreeRTOS\include\FreeRTOSConfig.h)(0x69C201C9)
@@ -541,14 +555,14 @@ I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
-F (..\User\Tasks\HeartBeatTask.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\heartbeattask.o --omf_browse .\obj\heartbeattask.crf --depend .\obj\heartbeattask.d)
-I (..\User\Tasks\HeartBeatTask.h)(0x69C201C9)
+F (..\User\Tasks\HeartBeatTask.c)(0x69CCB4DC)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\heartbeattask.o --omf_browse .\obj\heartbeattask.crf --depend .\obj\heartbeattask.d)
+I (..\User\Tasks\HeartBeatTask.h)(0x69CCD922)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -596,16 +610,16 @@ I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
 I (..\SYSTEM\uart4\uart4.h)(0x69C201C9)
 I (..\APP\app.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\string.h)(0x588B8344)
-F (..\User\Tasks\TFTask.c)(0x69C221AD)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\tftask.o --omf_browse .\obj\tftask.crf --depend .\obj\tftask.d)
+F (..\User\Tasks\TFTask.c)(0x69C240DB)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\tftask.o --omf_browse .\obj\tftask.crf --depend .\obj\tftask.d)
 I (..\User\Tasks\TFTask.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
@@ -655,34 +669,20 @@ I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\string.h)(0x588B8344)
-F (..\User\MidFunc\WQInterface.c)(0x69C220B5)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\wqinterface.o --omf_browse .\obj\wqinterface.crf --depend .\obj\wqinterface.d)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+F (..\User\MidFunc\WQInterface.c)(0x69CCD5E2)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\wqinterface.o --omf_browse .\obj\wqinterface.crf --depend .\obj\wqinterface.d)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
-I (..\Driver\SelfExam\self_exam.h)(0x69C201C8)
-I (..\Driver\COD\cod.h)(0x69C201C8)
-I (..\Driver\COD\../sensor_common.h)(0x69C201C8)
-I (..\Driver\Y4000\y4000.h)(0x69C201C8)
-I (..\Driver\CDOM\cdom.h)(0x69C201C8)
-I (..\Driver\CHL\chl.h)(0x69C201C8)
-I (..\Driver\DO\do.h)(0x69C201C8)
-I (..\Driver\PH\ph.h)(0x69C201C8)
-I (..\Driver\SAL\sal.h)(0x69C201C8)
-I (..\Driver\Voltage\voltage.h)(0x69C201C8)
-I (..\Driver\OLED\oled.h)(0x69C201C8)
-I (..\Third_lib\U8g2\u8g2.h)(0x69C201C9)
-I (..\Third_lib\U8g2\u8x8.h)(0x69C201C9)
-I (D:\keil5\ARM\ARMCC\include\stdarg.h)(0x588B8344)
+I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
-I (D:\keil5\ARM\ARMCC\include\limits.h)(0x588B8344)
-I (..\SYSTEM\IIC\iic.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\FreeRTOSConfig.h)(0x69C201C9)
 I (..\SYSTEM\sys\sys.h)(0x69C201C9)
 I (..\APP\stm32f4xx.h)(0x69C201C8)
 I (..\Firmware\cmsis\core\core_cm4.h)(0x69C201C8)
@@ -717,10 +717,6 @@ I (..\Firmware\driver\inc\stm32f4xx_can.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_dac.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_dcmi.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_fsmc.h)(0x69C201C8)
-I (..\SYSTEM\uart4\uart4.h)(0x69C201C9)
-I (..\APP\app.h)(0x69C201C8)
-I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
-I (..\Third_lib\FreeRTOS\include\FreeRTOSConfig.h)(0x69C201C9)
 I (..\SYSTEM\usart\usart.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdio.h)(0x588B8344)
 I (..\Third_lib\FreeRTOS\include\projdefs.h)(0x69C201C9)
@@ -728,15 +724,33 @@ I (..\Third_lib\FreeRTOS\include\portable.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\deprecated_definitions.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
+I (..\Driver\SelfExam\self_exam.h)(0x69CCC6F2)
+I (..\Driver\COD\cod.h)(0x69C201C8)
+I (..\Driver\COD\../sensor_common.h)(0x69C201C8)
+I (..\Driver\Y4000\y4000.h)(0x69C201C8)
+I (..\Driver\CDOM\cdom.h)(0x69C201C8)
+I (..\Driver\CHL\chl.h)(0x69C201C8)
+I (..\Driver\DO\do.h)(0x69C201C8)
+I (..\Driver\PH\ph.h)(0x69C201C8)
+I (..\Driver\SAL\sal.h)(0x69C201C8)
+I (..\Driver\Voltage\voltage.h)(0x69C201C8)
+I (..\Driver\OLED\oled.h)(0x69C201C8)
+I (..\Third_lib\U8g2\u8g2.h)(0x69C201C9)
+I (..\Third_lib\U8g2\u8x8.h)(0x69C201C9)
+I (D:\keil5\ARM\ARMCC\include\stdarg.h)(0x588B8344)
+I (D:\keil5\ARM\ARMCC\include\limits.h)(0x588B8344)
+I (..\SYSTEM\IIC\iic.h)(0x69C201C9)
+I (..\SYSTEM\uart4\uart4.h)(0x69C201C9)
+I (..\APP\app.h)(0x69C201C8)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
 I (..\Driver\AHT20\AHT20.h)(0x69C201C8)
 I (..\Driver\Buzzer\buzzer.h)(0x69C201C8)
-I (..\User\Tasks\AcqTask.h)(0x69C201C9)
+I (..\User\Tasks\AcqTask.h)(0x69CA6A97)
 I (..\Third_lib\FreeRTOS\include\semphr.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (..\Driver\TF\TF.h)(0x69C201C8)
-F (..\Driver\COD\cod.c)(0x69C201C8)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\cod.o --omf_browse .\obj\cod.crf --depend .\obj\cod.d)
+F (..\Driver\COD\cod.c)(0x69CA7DD0)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\cod.o --omf_browse .\obj\cod.crf --depend .\obj\cod.d)
 I (..\Driver\COD\cod.h)(0x69C201C8)
 I (..\Driver\COD\../sensor_common.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
@@ -771,7 +785,7 @@ I (..\Driver\SAL\sal.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (..\SYSTEM\Modbus\modbus.h)(0x69C201C9)
-F (..\Driver\Y4000\y4000.c)(0x69C201C8)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\y4000.o --omf_browse .\obj\y4000.crf --depend .\obj\y4000.d)
+F (..\Driver\Y4000\y4000.c)(0x69CCD865)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\y4000.o --omf_browse .\obj\y4000.crf --depend .\obj\y4000.d)
 I (..\Driver\Y4000\y4000.h)(0x69C201C8)
 I (..\Driver\Y4000\../sensor_common.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
@@ -1097,8 +1111,8 @@ I (..\Firmware\driver\inc\stm32f4xx_dac.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_dcmi.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_fsmc.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdio.h)(0x588B8344)
-F (..\Driver\SelfExam\self_exam.c)(0x69C201C8)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\self_exam.o --omf_browse .\obj\self_exam.crf --depend .\obj\self_exam.d)
-I (..\Driver\SelfExam\self_exam.h)(0x69C201C8)
+F (..\Driver\SelfExam\self_exam.c)(0x69CCC708)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\self_exam.o --omf_browse .\obj\self_exam.crf --depend .\obj\self_exam.d)
+I (..\Driver\SelfExam\self_exam.h)(0x69CCC6F2)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
@@ -1251,7 +1265,7 @@ I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\APP\version.h)(0x69C201C8)
+I (..\APP\version.h)(0x69CA0DD4)
 I (..\Driver\W25Q128\w25q128.h)(0x69C201C8)
 I (D:\keil5\ARM\ARMCC\include\stdlib.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\string.h)(0x588B8344)
@@ -1542,7 +1556,7 @@ I (..\Firmware\driver\inc\stm32f4xx_can.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_dac.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_dcmi.h)(0x69C201C8)
 I (..\Firmware\driver\inc\stm32f4xx_fsmc.h)(0x69C201C8)
-F (..\SYSTEM\rs485\rs485.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\rs485.o --omf_browse .\obj\rs485.crf --depend .\obj\rs485.d)
+F (..\SYSTEM\rs485\rs485.c)(0x69CA875E)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\rs485.o --omf_browse .\obj\rs485.crf --depend .\obj\rs485.d)
 I (..\SYSTEM\rs485\rs485.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -1602,8 +1616,8 @@ I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (..\SYSTEM\Modbus\../RS485/rs485.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\string.h)(0x588B8344)
-F (..\SYSTEM\Flash\flash.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\flash.o --omf_browse .\obj\flash.crf --depend .\obj\flash.d)
-I (..\SYSTEM\Flash\flash.h)(0x69C201C9)
+F (..\SYSTEM\Flash\flash.c)(0x69CA6F52)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\flash.o --omf_browse .\obj\flash.crf --depend .\obj\flash.d)
+I (..\SYSTEM\Flash\flash.h)(0x69CA6DDA)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -1654,10 +1668,10 @@ I (..\Third_lib\FreeRTOS\include\queue.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\string.h)(0x588B8344)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
-I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\User\MidFunc\WQInterface.h)(0x69C220B3)
+I (..\User\MidFunc\WQInterface.h)(0x69CCC720)
 I (..\Driver\GPS\gps.h)(0x69C201C8)
-F (..\SYSTEM\uart4\uart4.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\uart4.o --omf_browse .\obj\uart4.crf --depend .\obj\uart4.d)
+I (D:\keil5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
+F (..\SYSTEM\uart4\uart4.c)(0x69CCB566)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\uart4.o --omf_browse .\obj\uart4.crf --depend .\obj\uart4.d)
 I (..\SYSTEM\uart4\uart4.h)(0x69C201C9)
 I (..\APP\app.h)(0x69C201C8)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
@@ -3232,6 +3246,57 @@ I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
 I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
+F (..\Third_lib\FreeRTOS\event_groups.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\event_groups.o --omf_browse .\obj\event_groups.crf --depend .\obj\event_groups.d)
+I (D:\keil5\ARM\ARMCC\include\stdlib.h)(0x588B8344)
+I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
+I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)
+I (D:\keil5\ARM\ARMCC\include\stdint.h)(0x588B8344)
+I (..\Third_lib\FreeRTOS\include\FreeRTOSConfig.h)(0x69C201C9)
+I (..\SYSTEM\sys\sys.h)(0x69C201C9)
+I (..\APP\stm32f4xx.h)(0x69C201C8)
+I (..\Firmware\cmsis\core\core_cm4.h)(0x69C201C8)
+I (..\Firmware\cmsis\core\core_cmInstr.h)(0x69C201C8)
+I (..\Firmware\cmsis\core\core_cmFunc.h)(0x69C201C8)
+I (..\Firmware\cmsis\core\core_cmSimd.h)(0x69C201C8)
+I (..\APP\system_stm32f4xx.h)(0x69C201C8)
+I (..\APP\stm32f4xx_conf.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_adc.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_crc.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_dbgmcu.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_dma.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_exti.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_flash.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_gpio.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_i2c.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_iwdg.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_pwr.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_rcc.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_rtc.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_sdio.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_spi.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_syscfg.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_tim.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_usart.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_wwdg.h)(0x69C201C8)
+I (..\Firmware\driver\inc\misc.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_cryp.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_hash.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_rng.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_can.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_dac.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_dcmi.h)(0x69C201C8)
+I (..\Firmware\driver\inc\stm32f4xx_fsmc.h)(0x69C201C8)
+I (..\SYSTEM\usart\usart.h)(0x69C201C9)
+I (D:\keil5\ARM\ARMCC\include\stdio.h)(0x588B8344)
+I (..\Third_lib\FreeRTOS\include\projdefs.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\portable.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\deprecated_definitions.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\mpu_wrappers.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\task.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\list.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\timers.h)(0x69C201C9)
+I (..\Third_lib\FreeRTOS\include\event_groups.h)(0x69C201C9)
 F (..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F\port.c)(0x69C201C9)(--c99 -c --cpu Cortex-M4.fp -g -O2 --apcs=interwork --split_sections -I ..\APP -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\SYSTEM\IIC -I ..\SYSTEM\SPI -I ..\SYSTEM\rs485 -I ..\Firmware\driver\inc -I ..\Firmware\driver\src -I ..\Firmware\cmsis\core -I ..\Firmware\cmsis\device -I ..\Third_lib\FreeRTOS\include -I ..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\Driver\AHT20 -I ..\Driver\CDOM -I ..\Driver\CHL -I ..\Driver\COD -I ..\Driver\DO -I ..\Driver\GPS -I ..\Driver\LED -I ..\Driver\PH -I ..\Driver\SAL -I ..\Driver\Y4000 -I ..\SYSTEM\Modbus -I ..\Driver\Buzzer -I ..\Driver\SelfExam -I ..\Driver\OLED -I ..\Driver\Voltage -I ..\Third_lib\U8g2 -I ..\Driver\Button -I ..\SYSTEM\Flash -I ..\Driver\Watchdog -I ..\SYSTEM\uart4 -I ..\Driver\OTA -I ..\Driver\W25Q128 -I ..\User -I ..\User\Tasks -I ..\User\MidFunc -I ..\Third_lib\FatFs -I ..\Driver\TF -I ..\SYSTEM\sdio_sdcard-I.\RTE\_FreeRTOS-ID:\keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-ID:\keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o .\obj\port.o --omf_browse .\obj\port.crf --depend .\obj\port.d)
 I (..\Third_lib\FreeRTOS\include\FreeRTOS.h)(0x69C201C9)
 I (D:\keil5\ARM\ARMCC\include\stddef.h)(0x588B8344)

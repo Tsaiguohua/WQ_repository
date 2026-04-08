@@ -1,4 +1,5 @@
 #include "WQInterface.h"
+#include "FreeRTOS.h"
 #include "self_exam.h"
 #include "cod.h"
 #include "y4000.h"
@@ -17,7 +18,14 @@
 #include "AcqTask.h"
 #include "TF.h"
 #include "stm32f4xx.h"
+#include "stm32f4xx.h"
 #include "stm32f4xx_usart.h"
+#include "task.h"
+#include "semphr.h"
+#include <stdio.h>
+
+/* UART4 专用的发送互斥锁，防止抢占导致串口数据交错 */
+static SemaphoreHandle_t g_uart4_tx_mutex = NULL;
 
 
 #if WQ_USE_SENSOR_COD
@@ -172,6 +180,21 @@ uint8_t WQ_UART4_Send(const char *str)
 #if WQ_USE_NetWork 
 	if(str == NULL)
 		return 0;
+
+    /* 首次使用前动态创建互斥锁 */
+    if (g_uart4_tx_mutex == NULL) {
+        g_uart4_tx_mutex = xSemaphoreCreateMutex();
+    }
+
+    /* 获取发送锁，防止被其他任务抢占插嘴 */
+    if (g_uart4_tx_mutex != NULL) {
+        xSemaphoreTake(g_uart4_tx_mutex, portMAX_DELAY);
+    }
+
+    /* ⚠️ 关键修复：发送前临时关闭 IDLE 中断
+     * 防止发送操作触发虚假的 IDLE 中断，导致 DMA 接收通道被 DeInit 摧毁 */
+    USART_ITConfig(UART4, USART_IT_IDLE, DISABLE);
+
 	const char *p = str;
 	while(*p){
 		while (USART_GetFlagStatus(UART4 ,USART_FLAG_TXE) == RESET);
@@ -179,6 +202,20 @@ uint8_t WQ_UART4_Send(const char *str)
 		p++;
 	}
 	while (USART_GetFlagStatus (UART4,USART_FLAG_TC) == RESET);
+
+    /* 发送完毕，清除可能残留的 IDLE 标志位，再重新使能 IDLE 中断 */
+    {
+        volatile uint32_t __sr = UART4->SR;
+        volatile uint32_t __dr = UART4->DR;
+        (void)__sr; (void)__dr;
+    }
+    USART_ITConfig(UART4, USART_IT_IDLE, ENABLE);
+
+    /* 释放锁 */
+    if (g_uart4_tx_mutex != NULL) {
+        xSemaphoreGive(g_uart4_tx_mutex);
+    }
+
 	return 1;
 #endif
 }
@@ -305,6 +342,13 @@ uint8_t WQ_Storage_WriteTXT(const char *txt_str) {
 }
 
 
+
+void WQ_System_Set4GPower(bool on)
+{
+#if WQ_USE_NetWork	
+    SelfExam_Set4GPower(on);
+#endif
+}
 void WQ_System_Restart(void)
 {
     NVIC_SystemReset();
@@ -319,10 +363,7 @@ void WQ_System_SetBuzzer(bool on)
     }
 }
 
-#include "self_exam.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include <stdio.h>
+
 
 void WQ_System_ScanAndBindChannels(void)
 {
@@ -388,7 +429,8 @@ WQ_InterfaceTypeDef WQInterface = {
 	.System ={                          
         .Restart = WQ_System_Restart,
         .SetBuzzer = WQ_System_SetBuzzer,
-        .ScanAndBindChannels = WQ_System_ScanAndBindChannels
+        .ScanAndBindChannels = WQ_System_ScanAndBindChannels,
+        .Set4GPower = WQ_System_Set4GPower
 	},
 	.Display = {
 

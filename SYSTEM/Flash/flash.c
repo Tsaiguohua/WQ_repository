@@ -3,6 +3,7 @@
 #include "semphr.h"
 #include "string.h"
 #include "task.h"
+#include "WQInterface.h"
 #include "usart.h"   // 用于调试输出
 #include <stdbool.h> // 用于bool类型
 
@@ -57,8 +58,6 @@
  *                          外部变量引用
  *===========================================================================*/
 
-/* 包含通道状态定义的中间层头文件 */
-#include "WQInterface.h"
 
 /* 频率配置 - 定义在各自模块 */
 extern uint16_t g_acquisition_frequency; // 采集频率
@@ -172,13 +171,10 @@ void Flash_SaveSystemState(void) {
     return;
   }
 
-  /* 进入临界区，读取所有状态变量（确保原子性） */
+  /* 进入临界区，读取频率变量（确保原子性） */
   taskENTER_CRITICAL();
 
-  /* 只保存5个必要变量，将中间层当前探明的通道连接属性序列化 */
-  wbuff[FLASH_IDX_CHANNEL1_STATE] = (uint16_t)WQInterface.Channel[0].connected;
-  wbuff[FLASH_IDX_CHANNEL2_STATE] = (uint16_t)WQInterface.Channel[1].connected;
-  wbuff[FLASH_IDX_CHANNEL3_STATE] = (uint16_t)WQInterface.Channel[2].connected;
+  /* 只保存频率参数（通道状态由开机自检动态决定，不再持久化） */
   wbuff[FLASH_IDX_ACQ_FREQUENCY] = (uint16_t)g_acquisition_frequency;
   wbuff[FLASH_IDX_UPL_FREQUENCY] = (uint16_t)g_upload_frequency;
 
@@ -215,17 +211,11 @@ void Flash_LoadSystemState(void) {
   taskENTER_CRITICAL();
 
   if (flash_valid) {
-    /* 从Flash恢复状态至中间层 */
-    WQInterface.Channel[0].connected = rbuff[FLASH_IDX_CHANNEL1_STATE];
-    WQInterface.Channel[1].connected = rbuff[FLASH_IDX_CHANNEL2_STATE];
-    WQInterface.Channel[2].connected = rbuff[FLASH_IDX_CHANNEL3_STATE];
+    /* 从Flash恢复频率参数（通道状态由开机自检动态决定，不再从Flash恢复） */
     g_acquisition_frequency = rbuff[FLASH_IDX_ACQ_FREQUENCY];
     g_upload_frequency = rbuff[FLASH_IDX_UPL_FREQUENCY];
   } else {
-    /* Flash未初始化，使用默认值关闭状态 */
-    WQInterface.Channel[0].connected = 0;        
-    WQInterface.Channel[1].connected = 0;        
-    WQInterface.Channel[2].connected = 0;      
+    /* Flash未初始化，使用默认值 */
     g_acquisition_frequency = 5; // 默认5秒
     g_upload_frequency = 10;     // 默认10秒
   }

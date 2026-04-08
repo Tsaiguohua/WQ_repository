@@ -83,6 +83,7 @@
 ".\obj\tasks.o"
 ".\obj\timers.o"
 ".\obj\heap_4.o"
+".\obj\event_groups.o"
 ".\obj\port.o"
 ".\obj\mui.o"
 ".\obj\mui_u8g2.o"

@@ -50,6 +50,8 @@
 .\obj\main.o: ..\Third_lib\FreeRTOS\include\list.h
 .\obj\main.o: ..\Third_lib\FreeRTOS\include\queue.h
 .\obj\main.o: ..\Third_lib\FreeRTOS\include\semphr.h
+.\obj\main.o: ..\Third_lib\FreeRTOS\include\event_groups.h
+.\obj\main.o: ..\Third_lib\FreeRTOS\include\timers.h
 .\obj\main.o: ..\SYSTEM\delay\delay.h
 .\obj\main.o: ..\SYSTEM\Flash\flash.h
 .\obj\main.o: ..\SYSTEM\IIC\iic.h

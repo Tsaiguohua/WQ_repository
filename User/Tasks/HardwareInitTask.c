@@ -1,10 +1,12 @@
 #include "HardwareInitTask.h"
+#include "TasksInit.h"
 #include "WQInterface.h"
 #include "self_exam.h"
 #include "uart4.h"
 #include "GPSTask.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "event_groups.h"
 #include <stdio.h>
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +27,7 @@
 
 /**
  * @brief  硬件初始化任务（最高优先级，完成后自删除）
- * @note   对标 OV-Watch 的 HardwareInitTask
+ * @note   
  */
 void HardwareInitTask(void *argument)
 {
@@ -42,7 +44,9 @@ void HardwareInitTask(void *argument)
     /*------------------------------------------------------------------
      * 第一阶段：通信硬件初始化
      *-----------------------------------------------------------------*/
-
+    /* 初始化底层通道控制高侧开关 GPIO */
+    SelfExam_Init();
+	
     /* RS485 总线初始化（传感器通信） */
     extern bool rs485_init(void);
     if (rs485_init()) {
@@ -104,9 +108,8 @@ void HardwareInitTask(void *argument)
      *           必须在恢复调度器之后，因为内部使用 vTaskDelay 等待上电稳定
      *-----------------------------------------------------------------*/
 
-    /* 初始化底层通道控制高侧开关 GPIO */
-    SelfExam_Init();
-
+    
+  
     /* 启动中间层的传感器扫描及函数挂载 */
     if (WQInterface.System.ScanAndBindChannels) {
         WQInterface.System.ScanAndBindChannels();
@@ -120,9 +123,12 @@ void HardwareInitTask(void *argument)
     }
 
     /*------------------------------------------------------------------
-     * 收尾：打印完成信息，任务自删除
+     * 收尾：通知所有业务任务"硬件初始化完成"，然后自删除
      *-----------------------------------------------------------------*/
     printf("========== Hardware Initialization Done ==========\r\n\r\n");
+
+    /* ★ 点灯！通知所有等待 EVT_HW_INIT_DONE 的业务任务可以开始工作了 */
+    xEventGroupSetBits(g_system_events, EVT_HW_INIT_DONE);
 
     vTaskDelete(NULL);  /* 任务使命完成，自我删除，释放内存 */
 }

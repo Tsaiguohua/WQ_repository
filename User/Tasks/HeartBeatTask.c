@@ -30,14 +30,16 @@ void Heartbeat_Task(void *pvParameters) {
   last_wake_time = xTaskGetTickCount();
 
   while (1) {
+    /* 先等待一个心跳周期（首次也等，避免系统刚启动就发心跳干扰数据上传） */
+    vTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(HEARTBEAT_INTERVAL * 1000));
+
     /* 1. 格式化心跳JSON */
     Heartbeat_FormatJSON(heartbeat_buffer, HEARTBEAT_BUFFER_SIZE);
 
-    /* 2. 发送心跳数据 */
-    Heartbeat_SendData(heartbeat_buffer);
-
-    /* 3. 等待下一个心跳周期（固定240秒） */
-    vTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(HEARTBEAT_INTERVAL * 1000));
+    /* 2. 通过统一接口发送（和 Upload 共用同一个 UART4 出口，避免并发冲突） */
+    if (WQInterface.Network.connected) {
+        WQInterface.Network.Send(heartbeat_buffer);
+    }
   }
 }
 

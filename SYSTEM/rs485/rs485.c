@@ -229,7 +229,6 @@ bool rs485_send(uint8_t *data, uint16_t len) {
       ;
     USART_SendData(RS485_USART, data[i]);
   }
-
   /* 等待最后一个字节发送完成 */
   while (USART_GetFlagStatus(RS485_USART, USART_FLAG_TC) == RESET)
     ;
@@ -248,10 +247,9 @@ bool rs485_receive(uint8_t *buf, uint16_t *len, uint32_t timeout_ms) {
   if (buf == NULL || len == NULL)
     return false;
 
-  /* 清空接收状态 */
-  rs485_rx_cnt = 0;
-  rs485_rx_complete = false;
-  memset(rs485_rx_buf, 0, RS485_RX_BUF_SIZE);
+  /* 注意：不在这里清空缓冲区！
+   * rs485_transfer 已经在临界区中正确清空了。
+   * 如果在这里再次清空，会与中断接收产生竞争条件。 */
 
   /* 等待接收完成信号量（会让出CPU给其他任务） */
   if (xSemaphoreTake(rs485_rx_sem, pdMS_TO_TICKS(timeout_ms)) == pdTRUE) {
@@ -291,17 +289,33 @@ bool rs485_transfer(uint8_t *tx_data, uint16_t tx_len, uint8_t *rx_buf,
     return false; // 获取锁失败
   }
 
-  /* 清空接收状态 */
-  rs485_rx_cnt = 0;
-  rs485_rx_complete = false;
+  /* ⚠️ 关键修复：发送前禁用RXNE中断，这样自动收发RS485模块的
+   * TX回声字节会被USART硬件直接丢弃，不会进入接收缓冲区。 */
+  USART_ITConfig(RS485_USART, USART_IT_RXNE, DISABLE);
 
-  /* 发送数据 */
+  /* 发送数据（此时RXNE关闭，回声被硬件忽略） */
   if (!rs485_send(tx_data, tx_len)) {
+    USART_ITConfig(RS485_USART, USART_IT_RXNE, ENABLE);
     xSemaphoreGive(rs485_mutex);
     return false;
   }
 
-  /* 等待接收响应 */
+  /* 发送完成后，清空所有接收状态 */
+  taskENTER_CRITICAL();
+  rs485_rx_cnt = 0;
+  rs485_rx_complete = false;
+  memset(rs485_rx_buf, 0, RS485_RX_BUF_SIZE);
+  /* 清空可能残留的信号量 */
+  xSemaphoreTake(rs485_rx_sem, 0);
+  /* 清除RXNE标志位（防止残留的回声字节触发中断） */
+  if (USART_GetFlagStatus(RS485_USART, USART_FLAG_RXNE) == SET) {
+    (void)USART_ReceiveData(RS485_USART);
+  }
+  /* 重新启用RXNE中断，开始接收传感器的真正回复 */
+  USART_ITConfig(RS485_USART, USART_IT_RXNE, ENABLE);
+  taskEXIT_CRITICAL();
+
+  /* 等待传感器真正的响应 */
   ret = rs485_receive(rx_buf, rx_len, timeout_ms);
 
   /* 释放互斥锁 */
@@ -309,6 +323,9 @@ bool rs485_transfer(uint8_t *tx_data, uint16_t tx_len, uint8_t *rx_buf,
 
   return ret;
 }
+
+
+
 
 /*============================================================================
  *                          中断处理函数

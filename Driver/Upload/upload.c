@@ -1,7 +1,6 @@
 #include "upload.h"
 #include "FreeRTOS.h"
 #include "AcqTask.h"
-#include "acquisition.h"
 #include "gps.h"
 #include "self_exam.h"
 #include "semphr.h"
@@ -268,13 +267,15 @@ static void Upload_FormatJSON(char *buffer, uint16_t buffer_size,
           acq_data->upload_frequency);
   sprintf(buffer + strlen(buffer),
           "\"Channel1\":%d,\r\n\"Channel2\":%d,\r\n\"Channel3\":%d,\r\n",
-          acq_data->channel1_state, acq_data->channel2_state,
-          acq_data->channel3_state);
+          WQInterface.Channel[0].connected,
+          WQInterface.Channel[1].connected,
+          WQInterface.Channel[2].connected);
   sprintf(buffer + strlen(buffer),
           "\"ChannelSensor1\":%d,\r\n\"ChannelSensor2\":%d,"
           "\r\n\"ChannelSensor3\":%d,\r\n",
-          acq_data->channel1_sensor, acq_data->channel2_sensor,
-          acq_data->channel3_sensor);
+          (int)WQInterface.Channel[0].type,
+          (int)WQInterface.Channel[1].type,
+          (int)WQInterface.Channel[2].type);
 
   /* ⭐ 关键修改：检查COD连接状态，未连接时上传999 */
   if (acq_data->cod_connected) {
@@ -346,6 +347,6 @@ static void Upload_SendData(const char *data) {
     return;
   }
   if(WQInterface.Network.Send != NULL){
-  WQInterface.NetWork.Send = WQ_UART4_Send(data);
-}
+    WQInterface.Network.Send(data);
+  }
 }

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 //////////////////////////////////////////////////////////////////////////////////
 // 传感器自检模块 - 纯硬件驱动层 (重构简化版)
 //
@@ -41,6 +42,11 @@
 #define CHANNEL3_GPIO_PIN GPIO_Pin_2
 #define CHANNEL3_GPIO_CLK RCC_AHB1Periph_GPIOE
 
+//4G模块控制引脚：PE3 */
+#define DTU_POWER_GPIO_PORT GPIOE
+#define DTU_POWER_GPIO_PIN GPIO_Pin_3
+#define DTU_POWER_GPIO_CLK RCC_AHB1Periph_GPIOE
+
 /* 通道控制宏 */
 #define CHANNEL1_ON() GPIO_SetBits(CHANNEL1_GPIO_PORT, CHANNEL1_GPIO_PIN)
 #define CHANNEL1_OFF() GPIO_ResetBits(CHANNEL1_GPIO_PORT, CHANNEL1_GPIO_PIN)
@@ -49,6 +55,8 @@
 #define CHANNEL3_ON() GPIO_SetBits(CHANNEL3_GPIO_PORT, CHANNEL3_GPIO_PIN)
 #define CHANNEL3_OFF() GPIO_ResetBits(CHANNEL3_GPIO_PORT, CHANNEL3_GPIO_PIN)
 
+#define DTU_POWER_ON() GPIO_SetBits(DTU_POWER_GPIO_PORT, DTU_POWER_GPIO_PIN)
+#define DTU_POWER_OFF() GPIO_ResetBits(DTU_POWER_GPIO_PORT, DTU_POWER_GPIO_PIN)
 /*============================================================================
  *                          CRC16计算（和裸机一致）
  *===========================================================================*/
@@ -121,9 +129,15 @@ void SelfExam_Init(void) {
   /* 通道3 */
   GPIO_InitStructure.GPIO_Pin = CHANNEL3_GPIO_PIN;
   GPIO_Init(CHANNEL3_GPIO_PORT, &GPIO_InitStructure);
+  
+  /* 4G模块开关 */
+  GPIO_InitStructure.GPIO_Pin = DTU_POWER_GPIO_PIN;
+  GPIO_Init(DTU_POWER_GPIO_PORT, &GPIO_InitStructure);
 
   /* 系统上电初期主动掐断所有通道路，确保冷启动状态 */
   SelfExam_CloseAllChannels();
+  //4g模块开关打开
+  DTU_POWER_ON();
 }
 
 void SelfExam_OpenChannel(uint8_t channel) {
@@ -151,13 +165,6 @@ void SelfExam_CloseAllChannels(void) {
 }
 
 
-#include "self_exam.h"
-#include "FreeRTOS.h"
-#include "stm32f4xx.h"
-#include "task.h"
-#include "rs485.h" // 🌟 包含 RS485 的头文件
-#include <stdio.h>
-#include <string.h>
 
 /*============================================================================
  * 探测核心方法 (🌟 重构后使用高级API)
@@ -165,42 +172,61 @@ void SelfExam_CloseAllChannels(void) {
 
 uint8_t SelfExam_ProbeAddress(void) {
   uint8_t tx_buf[8];
-  uint8_t rx_buf[64]; // 自己准备一个本地的盆来接数据
+  uint8_t rx_buf[64];
   uint16_t rx_len = 0;
   uint16_t crc;
   uint8_t address = 0;
 
-  /* 组装广播查询帧: 0xFF 0x03 0x30 0x00 0x00 0x01 [CRC_L] [CRC_H] */
-  tx_buf[0] = 0xFF; 
-  tx_buf[1] = 0x03; 
-  tx_buf[2] = 0x30; 
-  tx_buf[3] = 0x00; 
-  tx_buf[4] = 0x00; 
-  tx_buf[5] = 0x01; 
-  crc = CRC_Compute(tx_buf, 6);
-  tx_buf[6] = crc & 0xFF;        
-  tx_buf[7] = (crc >> 8) & 0xFF; 
+  /* 逐一尝试地址 0x01 ~ 0x07（对应7种传感器类型）
+   * 广播 0xFF 很多传感器不支持，直接点名询问更可靠 */
+  for (uint8_t try_addr = 0x01; try_addr <= 0x07; try_addr++) {
 
-  /* 🌟 使用 rs485.c 提供的API：自动加锁、自动发送、自动等待接收(超时500ms) */
-  if (rs485_transfer(tx_buf, 8, rx_buf, &rx_len, 500)) {
-      
-      /* 如果成功收到了响应 (且长度大于等于 7 字节) */
-      if (rx_len >= 7) {
-          uint16_t recv_crc = rx_buf[rx_len - 2] | (rx_buf[rx_len - 1] << 8);
-          uint16_t calc_crc = CRC_Compute(rx_buf, rx_len - 2);
-          
-          // Y4000 等特殊传感器的设备不遵循严谨的 Modbus CRC
-          if (calc_crc == recv_crc || (rx_buf[0] == 0x07 && rx_buf[1] == 0x03)) {
-              address = rx_buf[0];
-          } else {
-             // 特殊判断兜底
-             if (rx_buf[0] == 0x07 && rx_buf[1] == 0x03) {
-                 address = 0x07;
-             }
-          }
+    /* 组装单播读地址寄存器帧: [地址] 03 30 00 00 01 [CRC_L] [CRC_H] */
+    tx_buf[0] = try_addr;
+    tx_buf[1] = 0x03;
+    tx_buf[2] = 0x30;
+    tx_buf[3] = 0x00;
+    tx_buf[4] = 0x00;
+    tx_buf[5] = 0x01;
+    crc = CRC_Compute(tx_buf, 6);
+    tx_buf[6] = crc & 0xFF;
+    tx_buf[7] = (crc >> 8) & 0xFF;
+
+    rx_len = 0;
+    if (rs485_transfer(tx_buf, 8, rx_buf, &rx_len, 200)) {
+      if (rx_len >= 5) {
+        /* 验证响应：第一个字节应是传感器地址，CRC校验通过 */
+        uint16_t recv_crc = rx_buf[rx_len - 2] | (rx_buf[rx_len - 1] << 8);
+        uint16_t calc_crc = CRC_Compute(rx_buf, rx_len - 2);
+
+        if (calc_crc == recv_crc && rx_buf[0] == try_addr) {
+          /* 响应地址与我们询问的地址一致，找到传感器！ */
+          address = try_addr;
+          printf("[Probe] Channel sensor found! Address=0x%02X Type=%d\r\n",
+                 try_addr, try_addr);
+          break;
+        }
       }
+    }
+  }
+
+  if (address == 0) {
+    printf("[Probe] No sensor detected on this channel.\r\n");
   }
 
   return address;
 }
 
+
+
+/**
+ * @brief  控制4G模块电源
+ * @param  on: true=通电, false=断电
+ */
+void SelfExam_Set4GPower(bool on) {
+    if (on) {
+        DTU_POWER_ON();
+    } else {
+        DTU_POWER_OFF();
+    }
+}

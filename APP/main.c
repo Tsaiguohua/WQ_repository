@@ -8,7 +8,7 @@
 #include "self_exam.h"
 #include "sys.h"
 #include "task.h"
-#include "uart4.h" // UART4 MQTT驱动
+#include "uart4.h" 
 #include "usart.h"
 #include "watchdog.h" // 看门狗驱动
 

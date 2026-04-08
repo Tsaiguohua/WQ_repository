@@ -78,6 +78,8 @@ TaskHandle_t HeartbeatTaskHandle = NULL;
 /* UART4 接收队列（双缓冲机制） */
 QueueHandle_t xUartRxQueue = NULL;
 
+/* 系统事件组（用于任务间同步，替代全局标志变量） */
+EventGroupHandle_t g_system_events = NULL;
 
 /*============================================================================
  *                          统一任务初始化入口
@@ -91,7 +93,7 @@ QueueHandle_t xUartRxQueue = NULL;
  *         - 创建所有业务任务（采集、上传、OLED、命令等）
  */
 void User_Tasks_Init(void) {
-
+ 
     printf("\r\n========== Creating FreeRTOS Tasks ==========\r\n");
 
     /*------------------------------------------------------------------
@@ -102,6 +104,12 @@ void User_Tasks_Init(void) {
     xUartRxQueue = xQueueCreate(5, sizeof(UartRxMsg_t));
     if (xUartRxQueue == NULL) {
         printf("[TasksInit] ERROR: xUartRxQueue create failed!\r\n");
+    }
+
+    /* 系统事件组（用于 HardwareInitTask → 业务任务 的同步） */
+    g_system_events = xEventGroupCreate();
+    if (g_system_events == NULL) {
+        printf("[TasksInit] ERROR: g_system_events create failed!\r\n");
     }
 
     /* GPS 同步量与互斥锁预先创建，防止 IRQ 在此时到达导致错误 */
@@ -163,8 +171,8 @@ void User_Tasks_Init(void) {
                 &CmdTaskHandle);
 
     /* OTA 任务（始终存在，等待升级指令） */
-//    extern void OTA_TaskInit(void);
-//    OTA_TaskInit();
+    extern void OTA_TaskInit(void);
+    OTA_TaskInit();
 
     /* GPS 数据接收与解析任务 */
     xTaskCreate(GPS_Task,

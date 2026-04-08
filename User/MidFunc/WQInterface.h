@@ -97,6 +97,7 @@ typedef struct {
     void (*Restart)(void);
     void (*SetBuzzer)(bool on);
     void (*ScanAndBindChannels)(void);
+    void (*Set4GPower)(bool on);  // 4G模块电源控制
 } WQ_System_InterfaceTypeDef;
 
 // ===== OLED显示接口 =====

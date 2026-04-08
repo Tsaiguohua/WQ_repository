@@ -24,7 +24,7 @@
 #endif
 
 #ifndef APP_VERSION_MINOR
-#define APP_VERSION_MINOR 0 // 次版本号（默认0）
+#define APP_VERSION_MINOR 1 // 次版本号（默认0）
 #endif
 
 #ifndef APP_VERSION_PATCH

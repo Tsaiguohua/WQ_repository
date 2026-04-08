@@ -50,6 +50,8 @@
 .\obj\tasksinit.o: ..\Third_lib\FreeRTOS\include\list.h
 .\obj\tasksinit.o: ..\Third_lib\FreeRTOS\include\queue.h
 .\obj\tasksinit.o: ..\Third_lib\FreeRTOS\include\semphr.h
+.\obj\tasksinit.o: ..\Third_lib\FreeRTOS\include\event_groups.h
+.\obj\tasksinit.o: ..\Third_lib\FreeRTOS\include\timers.h
 .\obj\tasksinit.o: ..\User\Tasks\HardwareInitTask.h
 .\obj\tasksinit.o: ..\User\Tasks\AcqTask.h
 .\obj\tasksinit.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdbool.h

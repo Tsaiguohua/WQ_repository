@@ -52,6 +52,8 @@
 .\obj\commandtask.o: ..\Third_lib\FreeRTOS\include\list.h
 .\obj\commandtask.o: ..\Third_lib\FreeRTOS\include\queue.h
 .\obj\commandtask.o: ..\Third_lib\FreeRTOS\include\semphr.h
+.\obj\commandtask.o: ..\Third_lib\FreeRTOS\include\event_groups.h
+.\obj\commandtask.o: ..\Third_lib\FreeRTOS\include\timers.h
 .\obj\commandtask.o: ..\User\Tasks\AcqTask.h
 .\obj\commandtask.o: ..\User\MidFunc\WQInterface.h
 .\obj\commandtask.o: ..\Driver\GPS\gps.h

@@ -90,13 +90,8 @@ typedef struct {
   bool sal_connected;   // 盐度传感器是否在线
   bool y4000_connected; // Y4000多参数传感器是否在线
   
-  /* 通道状态 */
-  uint8_t channel1_state;        // 通道1状态（0=关闭，1=开启）
-  uint8_t channel2_state;        // 通道2状态
-  uint8_t channel3_state;        // 通道3状态
-  sensor_type_t channel1_sensor; // 通道1传感器类型
-  sensor_type_t channel2_sensor; // 通道2传感器类型
-  sensor_type_t channel3_sensor; // 通道3传感器类型
+  /* 通道状态已全部移至中间层 WQInterface.Channel[i].connected 和 .type 管理
+   * 上传时请直接访问 WQInterface，不再在此结构体中冗余存储 */
 
   /* 采集配置 */
   uint16_t acq_frequency;    // 当前采集频率（秒）

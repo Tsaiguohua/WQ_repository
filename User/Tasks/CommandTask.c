@@ -40,7 +40,7 @@
 //      - {"THREECHANNEL_OPEN"}     开启通道3
 //      - {"THREECHANNEL_CLOSE"}    关闭通道3
 //      - {"ALL_CHANNEL_OPEN"}      开启所有通道
-//      - {"ALL_CHANNEL_CLOSE关闭所有通道
+//      - {"ALL_CHANNEL_CLOSE"}     关闭所有通道
 //
 //   3. 数据获取：
 //      - {"GET_MMSG"}              立即上传设备信息
@@ -62,7 +62,6 @@
 //   修改以下配置时自动保存到Flash，重启后恢复：
 //   - 采集频率
 //   - 上传频率
-//   - 通道开关状态
 //
 // 注意事项：
 //   ⚠️ Command任务优先级较高（7），确保及时响应命令
@@ -154,7 +153,8 @@ bool Command_Parse(const char *cmd_str, uint16_t len) {
   }
 
   /* 系统控制指令 */
-  if (strstr(cmd_str, "RESTART") != NULL || strstr(cmd_str, "BUZZER") != NULL) {
+  if (strstr(cmd_str, "RESTART") != NULL || strstr(cmd_str, "BUZZER") != NULL ||
+      strstr(cmd_str, "4GPOWER") != NULL) {
     return Command_HandleSystemControl(cmd_str);
   }
 
@@ -187,7 +187,7 @@ void Command_Task(void *pvParameters) {
 
     if (xQueueReceive(xUartRxQueue, &rxMsg, pdMS_TO_TICKS(3000)) == pdTRUE) {
       rx_count++;
-      printf("[Command] ===== Queue message received! Count: %lu =====\\r\\n",
+      printf("[Command] ===== Queue message received! Count: %lu =====\r\n",
              rx_count);
 
       /* 复制数据到本地缓冲区(此时中断可能已经在填充另一个缓冲区) */
@@ -198,7 +198,7 @@ void Command_Task(void *pvParameters) {
       local_buffer[copy_len] = '\0';
 
       /* 调试：打印接收到的数据（简洁版）*/
-      printf("[Command] Received %d bytes: %.50s...\\r\\n", copy_len,
+      printf("[Command] Received %d bytes: %.50s...\r\n", copy_len,
              local_buffer);
 
       /* 解析并执行指令 */
@@ -206,9 +206,9 @@ void Command_Task(void *pvParameters) {
 
       /* 注意：不需要重启DMA！中断已经自动切换缓冲区并重启了 */
     } else {
-      // 超时：打印DMA状态用于调试
-      printf("[Command] Queue timeout, checking DMA status...\r\n");
-      UART4_PrintDMAStatus();
+      // 超时：打印DMA状态用于调试（已注释，防止刷屏影响正常日志查看）
+       printf("[Command] Queue timeout, checking DMA status...\r\n");
+       UART4_PrintDMAStatus();
     }
   }
 }
@@ -336,20 +336,19 @@ static bool Command_HandleGetData(const char *cmd_str) {
 }
 
 /**
- * @brief  处理通道控制指令
+* @brief  处理通道控制指令,不放进flash里面了
  */
 static bool Command_HandleChannelControl(const char *cmd_str) {
   /* 单通道控制 */
   if (strstr(cmd_str, "ONECHANNEL_OPEN") != NULL) {
     Acquisition_SetChannelState(1, 1);
-    Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"ONECHANNEL_OPEN\"}");
     strcpy(last_command_status, "OPEN_ONEC_OK");
     return true;
   }
   if (strstr(cmd_str, "ONECHANNEL_CLOSE") != NULL) {
     Acquisition_SetChannelState(1, 0);
-    Flash_SaveSystemState(); // 保存通道状态
+ //   Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"ONECHANNEL_CLOSE\"}");
     strcpy(last_command_status, "CLOSE_ONEC_OK");
     return true;
@@ -357,14 +356,14 @@ static bool Command_HandleChannelControl(const char *cmd_str) {
 
   if (strstr(cmd_str, "TWOCHANNEL_OPEN") != NULL) {
     Acquisition_SetChannelState(2, 1);
-    Flash_SaveSystemState(); // 保存通道状态
+  //  Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"TWOCHANNEL_OPEN\"}");
     strcpy(last_command_status, "OPEN_TWOC_OK");
     return true;
   }
   if (strstr(cmd_str, "TWOCHANNEL_CLOSE") != NULL) {
     Acquisition_SetChannelState(2, 0);
-    Flash_SaveSystemState(); // 保存通道状态
+ //   Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"TWOCHANNEL_CLOSE\"}");
     strcpy(last_command_status, "CLOSE_TWOC_OK");
     return true;
@@ -372,14 +371,14 @@ static bool Command_HandleChannelControl(const char *cmd_str) {
 
   if (strstr(cmd_str, "THREECHANNEL_OPEN") != NULL) {
     Acquisition_SetChannelState(3, 1);
-    Flash_SaveSystemState(); // 保存通道状态
+ //   Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"THREECHANNEL_OPEN\"}");
     strcpy(last_command_status, "OPEN_THREEC_OK");
     return true;
   }
   if (strstr(cmd_str, "THREECHANNEL_CLOSE") != NULL) {
     Acquisition_SetChannelState(3, 0);
-    Flash_SaveSystemState(); // 保存通道状态
+ //   Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"THREECHANNEL_CLOSE\"}");
     strcpy(last_command_status, "CLOSE_THREEC_OK");
     return true;
@@ -390,7 +389,7 @@ static bool Command_HandleChannelControl(const char *cmd_str) {
     Acquisition_SetChannelState(1, 1);
     Acquisition_SetChannelState(2, 1);
     Acquisition_SetChannelState(3, 1);
-    Flash_SaveSystemState(); // 保存通道状态
+ //   Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"ALL_CHANNEL_OPEN\"}");
     strcpy(last_command_status, "OPEN_CHANNEL_OK");
     return true;
@@ -399,7 +398,7 @@ static bool Command_HandleChannelControl(const char *cmd_str) {
     Acquisition_SetChannelState(1, 0);
     Acquisition_SetChannelState(2, 0);
     Acquisition_SetChannelState(3, 0);
-    Flash_SaveSystemState(); // 保存通道状态
+ //   Flash_SaveSystemState(); // 保存通道状态
     Command_SendResponse("{\"Client_Command\":\"ALL_CHANNEL_CLOSE\"}");
     strcpy(last_command_status, "CLOSE_CHANNEL_OK");
     return true;
@@ -440,6 +439,26 @@ static bool Command_HandleSystemControl(const char *cmd_str) {
     }
     Command_SendResponse("{\"Client_Command\":\"BUZZER_CLOSE\"}");
     strcpy(last_command_status, "CLOSE_BUZZER_OK");
+    return true;
+  }
+
+  if (strstr(cmd_str, "4GPOWER_OPEN") != NULL) {
+    // 🌟 通过接口开启4G模块电源
+    if (WQInterface.System.Set4GPower != NULL) {
+        WQInterface.System.Set4GPower(true);
+    }
+    Command_SendResponse("{\"Client_Command\":\"4GPOWER_OPEN\"}");
+    strcpy(last_command_status, "OPEN_4GPOWER_OK");
+    return true;
+  }
+
+  if (strstr(cmd_str, "4GPOWER_CLOSE") != NULL) {
+    // 🌟 通过接口关闭4G模块电源
+    if (WQInterface.System.Set4GPower != NULL) {
+        WQInterface.System.Set4GPower(false);
+    }
+    Command_SendResponse("{\"Client_Command\":\"4GPOWER_CLOSE\"}");
+    strcpy(last_command_status, "CLOSE_4GPOWER_OK");
     return true;
   }
 

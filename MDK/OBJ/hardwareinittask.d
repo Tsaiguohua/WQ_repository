@@ -48,6 +48,11 @@
 .\obj\hardwareinittask.o: ..\Third_lib\FreeRTOS\include\mpu_wrappers.h
 .\obj\hardwareinittask.o: ..\Third_lib\FreeRTOS\include\task.h
 .\obj\hardwareinittask.o: ..\Third_lib\FreeRTOS\include\list.h
+.\obj\hardwareinittask.o: ..\User\Tasks\TasksInit.h
+.\obj\hardwareinittask.o: ..\Third_lib\FreeRTOS\include\queue.h
+.\obj\hardwareinittask.o: ..\Third_lib\FreeRTOS\include\semphr.h
+.\obj\hardwareinittask.o: ..\Third_lib\FreeRTOS\include\event_groups.h
+.\obj\hardwareinittask.o: ..\Third_lib\FreeRTOS\include\timers.h
 .\obj\hardwareinittask.o: ..\User\MidFunc\WQInterface.h
 .\obj\hardwareinittask.o: ..\Driver\GPS\gps.h
 .\obj\hardwareinittask.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdbool.h

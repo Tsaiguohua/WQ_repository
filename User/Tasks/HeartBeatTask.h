@@ -5,7 +5,7 @@
 #include "task.h"
 
 /* 心跳包相关定义 */
-#define HEARTBEAT_INTERVAL 240 // 心跳间隔，单位秒
+#define HEARTBEAT_INTERVAL 243 // 心跳间隔，单位秒
 #define HEARTBEAT_BUFFER_SIZE 256
 
 /**

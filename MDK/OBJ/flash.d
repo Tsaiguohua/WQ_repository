@@ -51,6 +51,6 @@
 .\obj\flash.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\flash.o: ..\Third_lib\FreeRTOS\include\task.h
 .\obj\flash.o: ..\Third_lib\FreeRTOS\include\list.h
-.\obj\flash.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\obj\flash.o: ..\User\MidFunc\WQInterface.h
 .\obj\flash.o: ..\Driver\GPS\gps.h
+.\obj\flash.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdbool.h

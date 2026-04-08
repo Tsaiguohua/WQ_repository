@@ -39,14 +39,11 @@
 #define SYSTEM_STATE_SECTOR FLASH_Sector_11 // 使用Sector 11
 #define SYSTEM_STATE_START_ADDR 0x080E0000  // Sector 11起始地址
 
-/* 数据索引定义（简化版本，只保存通道状态和频率） */
-#define FLASH_IDX_CHANNEL1_STATE 0 // 通道1状态
-#define FLASH_IDX_CHANNEL2_STATE 1 // 通道2状态
-#define FLASH_IDX_CHANNEL3_STATE 2 // 通道3状态
-#define FLASH_IDX_ACQ_FREQUENCY 3  // 采集频率
+/* 数据索引定义（通道状态不再持久化，索引0-2保留空位以兼容旧Flash布局） */
+#define FLASH_IDX_ACQ_FREQUENCY 3  // 采集频率（保持原索引位置，向后兼容）
 #define FLASH_IDX_UPL_FREQUENCY 4  // 上传频率
 
-#define FLASH_DATA_COUNT 5    // 总共5个数据项
+#define FLASH_DATA_COUNT 5    // 总共5个数据项（保持兼容旧布局）
 #define FLASH_BUFFER_SIZE 200 // 缓冲区大小
 
 /*============================================================================

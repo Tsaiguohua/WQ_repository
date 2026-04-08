@@ -1,8 +1,10 @@
 #include "AcqTask.h"
+#include "TasksInit.h"
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "semphr.h"
 #include "task.h"
+#include "event_groups.h"
 
 /* 移除底层传感器驱动和硬件相关的头文件，纯净地通过 WQInterface 调用 */
 #include "gps.h"       // 仅因为内部还需要用到 gps_data_t
@@ -128,18 +130,29 @@ void Acquisition_Task(void *pvParameters) {
   /* 初始化 */
   Acquisition_Init();
 
+  /*------------------------------------------------------------------
+   * ★ 关键同步点：等待 HardwareInitTask 完成传感器自检 + 绑定
+   *    使用事件组（Event Group）替代全局标志变量，零时序竞争。
+   *    在灯亮之前，本任务挂起休眠，不消耗任何 CPU 时间。
+   *-----------------------------------------------------------------*/
+  printf("[Acq] Waiting for hardware init to complete...\r\n");
+  xEventGroupWaitBits(g_system_events,   /* 事件组句柄 */
+                      EVT_HW_INIT_DONE,  /* 等待的事件位 */
+                      pdFALSE,           /* 不清除（其他任务也要看这个位） */
+                      pdTRUE,            /* 等所有指定位都置1 */
+                      portMAX_DELAY);    /* 永久等待 */
+  printf("[Acq] Hardware init done, starting acquisition.\r\n");
+
   /* 获取当前时间作为基准 */
   last_wake_time = xTaskGetTickCount();
 
-  // printf("[Acquisition] Task started\r\n");
-
-  /* 启动时根据Flash恢复的状态开启通道（类似裸机VoiceControl） */
   /* 重新打开所有在自检阶段被识别出存在传感器的通道，准备进行周期性采数 */
   bool any_channel_opened = false;
   for (int i = 0; i < 3; i++) {
     if (WQInterface.Channel[i].connected == 1 && WQInterface.Channel[i].type != SENSOR_TYPE_NONE) {
-      SelfExam_OpenChannel(i + 1);
+	    SelfExam_OpenChannel(i + 1);   //把所有通道重新上电
       any_channel_opened = true;
+      printf("[Acq] Channel %d ON (type=%d)\r\n", i + 1, WQInterface.Channel[i].type);
     }
   }
   if (any_channel_opened) {
@@ -154,9 +167,9 @@ void Acquisition_Task(void *pvParameters) {
     data.acq_frequency = g_acquisition_frequency;
     data.upload_frequency = Upload_GetFrequency(); // 获取上传频率
 
-        /* ==========================================
-         * 🌟 灵魂映射：把 3个物理通道状态 -> 映射成 7个逻辑传感器状态
-         * ========================================== */
+    /* ==========================================
+     * 🌟 灵魂映射：把 3个物理通道状态 -> 映射成 7个逻辑传感器状态
+     * ========================================== */
     /* 轮询三个通道 */
     for (int i = 0; i < 3; i++) {
       // 如果这个通道物理上是开启且连接的
@@ -260,7 +273,7 @@ static void collect_environment_data(acquisition_data_t *data) {
 	data->env_humi =humidity;
      data->env_temp =temperature;
 	}
- //    extern uint8_t battery; // 来自Voltage模块
+
      data->battery = WQInterface.Battery.GetBattery();
 }
 
@@ -273,10 +286,16 @@ static void collect_environment_data(acquisition_data_t *data) {
  */
 static void collect_all_water_sensors(acquisition_data_t *data) {
     for (int i = 0; i < 3; i++) {
-        // 如果通道开关是开的，且这个通道在自检时已经绑定了“读函数”
+        // 如果通道开关是开的，且这个通道在自检时已经绑定了"读函数"
         if (WQInterface.Channel[i].connected == 1 && WQInterface.Channel[i].Read != NULL) {
             // 直接执行！不需要问你是谁，不需要 switch-case
             WQInterface.Channel[i].Read(data);
+
+            /* ⚠️ RS485帧间间隔：三个传感器共享同一条半双工总线，
+             * 查完一个传感器后必须等总线完全静默，才能查下一个。
+             * 100ms 足以满足 Modbus RTU 3.5字符帧间隔要求（9600bps下约4ms），
+             * 并给传感器充足的时间释放总线。 */
+            vTaskDelay(pdMS_TO_TICKS(100));
         }
     }
 }

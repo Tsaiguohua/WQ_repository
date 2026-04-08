@@ -51,8 +51,11 @@
 .\obj\acqtask.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\obj\acqtask.o: ..\User\MidFunc\WQInterface.h
 .\obj\acqtask.o: ..\Driver\GPS\gps.h
+.\obj\acqtask.o: ..\User\Tasks\TasksInit.h
 .\obj\acqtask.o: ..\Third_lib\FreeRTOS\include\task.h
 .\obj\acqtask.o: ..\Third_lib\FreeRTOS\include\list.h
+.\obj\acqtask.o: ..\Third_lib\FreeRTOS\include\event_groups.h
+.\obj\acqtask.o: ..\Third_lib\FreeRTOS\include\timers.h
 .\obj\acqtask.o: ..\Driver\SelfExam\self_exam.h
 .\obj\acqtask.o: ..\User\Tasks\UpLoadTask.h
 .\obj\acqtask.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h

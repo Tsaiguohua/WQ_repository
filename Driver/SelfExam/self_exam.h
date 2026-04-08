@@ -40,4 +40,10 @@ void SelfExam_CloseAllChannels(void);
  */
 uint8_t SelfExam_ProbeAddress(void);
 
+/**
+ * @brief  控制4G模块电源
+ * @param  on: true=通电, false=断电
+ */
+void SelfExam_Set4GPower(bool on);
+
 #endif
