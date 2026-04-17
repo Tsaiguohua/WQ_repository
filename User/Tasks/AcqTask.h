@@ -44,9 +44,17 @@
  *===========================================================================*/
 
 /*============================================================================
- *                          采集数据结构体
- * 包含所有传感器的采集数据
+ *                          采集数据结构体 (KV 动态架构)
  *===========================================================================*/
+
+#define MAX_WATER_PARAMS 15
+
+typedef struct {
+    char key[12];     // 数据标识，如 "COD", "PH"
+    float value;      // 数值
+    bool is_valid;    // 该节点是否有数据
+} SensorNodeKV_t;
+
 
 typedef struct {
   /* 时间戳 */
@@ -67,31 +75,11 @@ typedef struct {
   float env_humi;  // 环境湿度（%）
   uint8_t battery; // 电池电量（%）
 
-  /* 水质数据 - COD传感器 */
-  float water_temp; // 水温（℃）
-  float cod;        // COD值（mg/L）
-  float toc;        // TOC值（mg/L）
-  float tur;        // 浊度（NTU）
-
-  /* 水质数据 - 其他传感器 */
-  float cdom;   // CDOM值
-  float chl;    // 叶绿素值
-  float ph;     // PH值（单独传感器或Y4000）
-  float do_val; // 溶解氧值（单独传感器或Y4000）
-  float sal;    // 盐度值（单独传感器或Y4000）
-  float atm;    // 大气压（Y4000）
-  
-  //水质传感器的在线状态
-  bool cod_connected;   // COD传感器是否在线
-  bool cdom_connected;  // CDOM传感器是否在线
-  bool chl_connected;   // 叶绿素传感器是否在线
-  bool ph_connected;    // PH传感器是否在线
-  bool do_connected;    // 溶解氧传感器是否在线
-  bool sal_connected;   // 盐度传感器是否在线
-  bool y4000_connected; // Y4000多参数传感器是否在线
-  
-  /* 通道状态已全部移至中间层 WQInterface.Channel[i].connected 和 .type 管理
-   * 上传时请直接访问 WQInterface，不再在此结构体中冗余存储 */
+  /* ===============================================================
+   * 全新 KV 数据动态插槽 (完全解耦具体水质传感器)
+   * =============================================================== */
+  SensorNodeKV_t water_nodes[MAX_WATER_PARAMS];
+  uint8_t current_node_count; 
 
   /* 采集配置 */
   uint16_t acq_frequency;    // 当前采集频率（秒）
@@ -170,6 +158,19 @@ bool Acquisition_SetChannelType(uint8_t channel, sensor_type_t type);
 
 
 
+
+/**
+ * @brief  获取动态 KV 结构中的某个特定的值
+ * @param  acq: 数据指针
+ * @param  key: 要查找的键值名
+ * @return 对应的 float 值，如果没找到或失效，返回 999.0f
+ */
+float Acq_GetVal_FromKV(acquisition_data_t *acq, const char *key);
+
+/**
+ * @brief  检查动态 KV 结构中是否包含某个键
+ */
+bool Acq_HasKV(acquisition_data_t *acq, const char *key);
 
 #endif
 

@@ -167,42 +167,9 @@ void Acquisition_Task(void *pvParameters) {
     data.acq_frequency = g_acquisition_frequency;
     data.upload_frequency = Upload_GetFrequency(); // 获取上传频率
 
-    /* ==========================================
-     * 🌟 灵魂映射：把 3个物理通道状态 -> 映射成 7个逻辑传感器状态
-     * ========================================== */
-    /* 轮询三个通道 */
-    for (int i = 0; i < 3; i++) {
-      // 如果这个通道物理上是开启且连接的
-      if (WQInterface.Channel[i].connected == 1) {
-
-                // 根据这个通道绑定的传感器类型，点亮快照里对应的标志位
-                switch (WQInterface.Channel[i].type) {
-                    case SENSOR_TYPE_COD:
-                        data.cod_connected = true;
-                        break;
-                    case SENSOR_TYPE_CDOM:
-                        data.cdom_connected = true;
-                        break;
-                    case SENSOR_TYPE_CHL:
-                        data.chl_connected = true;
-                        break;
-                    case SENSOR_TYPE_PH:
-                        data.ph_connected = true;
-                        break;
-                    case SENSOR_TYPE_DO:
-                        data.do_connected = true;
-                        break;
-                    case SENSOR_TYPE_SAL:
-                        data.sal_connected = true;
-                        break;
-                    case SENSOR_TYPE_Y4000:
-                        data.y4000_connected = true;
-                        break;
-                    default:
-                        break; // 未知类型不处理
-                }
-            }
-        } // 补充 for 循环的闭合大括号
+    /* ==========================================================
+     * (已删除硬编码的状态赋值逻辑，动态 KV 自给自足)
+     * ========================================================== */
 
     // printf("[Acquisition] Starting collection cycle...\r\n");
 
@@ -389,3 +356,22 @@ bool Acquisition_SetChannelType(uint8_t channel, sensor_type_t type) {
 }
 */
 
+float Acq_GetVal_FromKV(acquisition_data_t *acq, const char *key) {
+    if (acq == NULL || key == NULL) return 999.0f;
+    for (int i = 0; i < acq->current_node_count; i++) {
+        if (acq->water_nodes[i].is_valid && strcmp(acq->water_nodes[i].key, key) == 0) {
+            return acq->water_nodes[i].value;
+        }
+    }
+    return 999.0f; // 没有找到该键，返回用户指定的默认 999占位符
+}
+
+bool Acq_HasKV(acquisition_data_t *acq, const char *key) {
+    if (acq == NULL || key == NULL) return false;
+    for (int i = 0; i < acq->current_node_count; i++) {
+        if (acq->water_nodes[i].is_valid && strcmp(acq->water_nodes[i].key, key) == 0) {
+            return true;
+        }
+    }
+    return false;
+}

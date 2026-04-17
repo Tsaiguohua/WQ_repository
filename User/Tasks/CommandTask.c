@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "WQInterface.h"
+#include "cJSON.h" // 引入 cJSON 库
 //////////////////////////////////////////////////////////////////////////////////
 // MQTT命令解析处理模块 - FreeRTOS版本
 //
@@ -224,13 +225,24 @@ void Command_Task(void *pvParameters) {
 static bool Command_HandleFrequency(const char *cmd_str) {
   uint16_t freq = 0;
 
-  /* 简单解析JSON中的Frequency字段 */
-  const char *freq_pos = strstr(cmd_str, "Frequency");
-  if (freq_pos != NULL) {
-    /* 查找冒号后的数字 */
-    freq_pos = strchr(freq_pos, ':');
+  /* 使用 cJSON 强类型解析 */
+  cJSON *root = cJSON_Parse(cmd_str);
+  if (root != NULL) {
+    cJSON *item = cJSON_GetObjectItem(root, "Frequency");
+    if (item != NULL) {
+      freq = (uint16_t)item->valueint;
+    }
+    cJSON_Delete(root);
+  }
+
+  /* 如果 JSON 解析失败，降级为旧版字符串提取（兼容容错） */
+  if (freq == 0) {
+    const char *freq_pos = strstr(cmd_str, "Frequency");
     if (freq_pos != NULL) {
-      freq = (uint16_t)atoi(freq_pos + 1);
+      freq_pos = strchr(freq_pos, ':');
+      if (freq_pos != NULL) {
+        freq = (uint16_t)atoi(freq_pos + 1);
+      }
     }
   }
 
@@ -260,11 +272,24 @@ static bool Command_HandleFrequency(const char *cmd_str) {
 static bool Command_HandleAcqFrequency(const char *cmd_str) {
   uint16_t freq = 0;
 
-  const char *freq_pos = strstr(cmd_str, "AcqFrequency");
-  if (freq_pos != NULL) {
-    freq_pos = strchr(freq_pos, ':');
+  /* 使用 cJSON 强类型解析 */
+  cJSON *root = cJSON_Parse(cmd_str);
+  if (root != NULL) {
+    cJSON *item = cJSON_GetObjectItem(root, "AcqFrequency");
+    if (item != NULL) {
+      freq = (uint16_t)item->valueint;
+    }
+    cJSON_Delete(root);
+  }
+
+  /* 如果 JSON 解析失败，降级为旧版字符串提取（兼容容错） */
+  if (freq == 0) {
+    const char *freq_pos = strstr(cmd_str, "AcqFrequency");
     if (freq_pos != NULL) {
-      freq = (uint16_t)atoi(freq_pos + 1);
+      freq_pos = strchr(freq_pos, ':');
+      if (freq_pos != NULL) {
+        freq = (uint16_t)atoi(freq_pos + 1);
+      }
     }
   }
 
@@ -290,11 +315,24 @@ static bool Command_HandleAcqFrequency(const char *cmd_str) {
 static bool Command_HandleUploadFrequency(const char *cmd_str) {
   uint16_t freq = 0;
 
-  const char *freq_pos = strstr(cmd_str, "UploadFrequency");
-  if (freq_pos != NULL) {
-    freq_pos = strchr(freq_pos, ':');
+  /* 使用 cJSON 强类型解析 */
+  cJSON *root = cJSON_Parse(cmd_str);
+  if (root != NULL) {
+    cJSON *item = cJSON_GetObjectItem(root, "UploadFrequency");
+    if (item != NULL) {
+      freq = (uint16_t)item->valueint;
+    }
+    cJSON_Delete(root);
+  }
+
+  /* 如果 JSON 解析失败，降级为旧版字符串提取（兼容容错） */
+  if (freq == 0) {
+    const char *freq_pos = strstr(cmd_str, "UploadFrequency");
     if (freq_pos != NULL) {
-      freq = (uint16_t)atoi(freq_pos + 1);
+      freq_pos = strchr(freq_pos, ':');
+      if (freq_pos != NULL) {
+        freq = (uint16_t)atoi(freq_pos + 1);
+      }
     }
   }
 

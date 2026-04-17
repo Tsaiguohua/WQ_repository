@@ -4,11 +4,14 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "cJSON.h" 
 #include <stdio.h>
 #include <string.h>
 
 /* 当前上传频率（秒） */
-uint16_t g_upload_frequency = 30; // 默认30秒上传一次
+uint16_t g_upload_frequency = 10; // 默认30秒上传一次
+
+
 
 /* 立即上传标志 */
 static volatile bool upload_now_flag = false;
@@ -92,31 +95,28 @@ void Upload_Task(void *pvParameters) {
     
 
 /**
- * @brief  格式化JSON数据（参考裸机版本）
+ * @brief  格式化JSON数据（使用 cJSON 层层构建）
  * @param  buffer: 输出缓冲区
  * @param  buffer_size: 缓冲区大小
- * @param  acq_data: 采集数据指针（从队列获取）
- * @note   使用sprintf分步构建，避免Keil编译器转义字符问题
- *         未连接的传感器上传999，便于区分"数据为0"和"未连接"
+ * @param  acq_data: 采集数据指针
  */
 static void Upload_FormatJSON(char *buffer, uint16_t buffer_size,
                               acquisition_data_t *acq_data) {
-  bool gps_valid = false;
-  char time_str[30];
-  char lat_str[20], lon_str[20];
+  /* 1. 创建 cJSON 根节点 */
+  cJSON *root = cJSON_CreateObject();
+  if (root == NULL) {
+      buffer[0] = '\0';
+      return; 
+  }
+
+  char time_str[30], lat_str[20], lon_str[20];
   char temp_str[10], humi_str[10], voltage_str[10];
+  char freq_str[10], val_str[20];
 
-
-  /* 格式化时间字符串 */
+  /* 基础格式化 */
   sprintf(time_str, "%04d.%02d.%02d %02d:%02d", acq_data->year, acq_data->month,
           acq_data->day, acq_data->hour, acq_data->min);
-
-  /* 格式化环境数据字符串 */
-  sprintf(temp_str, "%.1f", acq_data->env_temp);
-  sprintf(humi_str, "%.1f", acq_data->env_humi);
-  sprintf(voltage_str, "%d%%", acq_data->battery);
-
-  /* 格式化经纬度字符串 */
+  
   if (acq_data->gps_valid) {
     sprintf(lat_str, "%.6fN", acq_data->latitude);
     sprintf(lon_str, "%.6fE", acq_data->longitude);
@@ -125,91 +125,123 @@ static void Upload_FormatJSON(char *buffer, uint16_t buffer_size,
     sprintf(lon_str, "0.000000E");
   }
 
-  /* 构建JSON字符串（分步构建，避免转义字符问题） */
-  sprintf(buffer, "\r\n{\r\n\"ID\":3,\r\n\"Number\":\"HDY1003\",\r\n\"SN\":"
-                  "\"0641100302\",\r\n");
-  sprintf(buffer + strlen(buffer),
-          "\"Temp\":\"%s\",\r\n\"Humi\":\"%s\",\r\n\"V\":\"%s\",\r\n", temp_str,
-          humi_str, voltage_str);
-  sprintf(buffer + strlen(buffer),
-          "\"Time\":\"%s\",\r\n\"Lat\":\"%s\",\r\n\"Lon\":\"%s\",\r\n",
-          time_str, lat_str, lon_str);
-  sprintf(buffer + strlen(buffer),
-          "\"GPS\":%d,\r\n\"AcqFrequency\":\"%ds\",\r\n\"UploadFrequency\":\"%"
-          "ds\",\r\n",
-          acq_data->gps_valid ? 1 : 0, acq_data->acq_frequency,
-          acq_data->upload_frequency);
-  sprintf(buffer + strlen(buffer),
-          "\"Channel1\":%d,\r\n\"Channel2\":%d,\r\n\"Channel3\":%d,\r\n",
-          WQInterface.Channel[0].connected,
-          WQInterface.Channel[1].connected,
-          WQInterface.Channel[2].connected);
-  sprintf(buffer + strlen(buffer),
-          "\"ChannelSensor1\":%d,\r\n\"ChannelSensor2\":%d,"
-          "\r\n\"ChannelSensor3\":%d,\r\n",
-          (int)WQInterface.Channel[0].type,
-          (int)WQInterface.Channel[1].type,
-          (int)WQInterface.Channel[2].type);
+  sprintf(temp_str, "%.1f", acq_data->env_temp);
+  sprintf(humi_str, "%.1f", acq_data->env_humi);
+  sprintf(voltage_str, "%d%%", acq_data->battery);
 
-  /* ⭐ 关键修改：检查COD连接状态，未连接时上传999 */
-  if (acq_data->cod_connected) {
-    sprintf(buffer + strlen(buffer),
-            "\"WTemp\":\"%.2f\",\r\n\"COD\":\"%.6f\",\r\n\"TOC\":\"%.6f\",\r\n",
-            acq_data->water_temp, acq_data->cod, acq_data->toc);
-    sprintf(buffer + strlen(buffer), "\"TUR\":\"%.6f\",\r\n", acq_data->tur);
+  /* 2. 填充系统基础数据 */
+  cJSON_AddNumberToObject(root, "ID", 3);
+  cJSON_AddStringToObject(root, "Number", "HDY1003");
+  cJSON_AddStringToObject(root, "SN", "0641100302");
+  cJSON_AddStringToObject(root, "Temp", temp_str);
+  cJSON_AddStringToObject(root, "Humi", humi_str);
+  cJSON_AddStringToObject(root, "V", voltage_str);
+  cJSON_AddStringToObject(root, "Time", time_str);
+  cJSON_AddStringToObject(root, "Lat", lat_str);
+  cJSON_AddStringToObject(root, "Lon", lon_str);
+  cJSON_AddNumberToObject(root, "GPS", acq_data->gps_valid ? 1 : 0);
+
+  sprintf(freq_str, "%ds", acq_data->acq_frequency);
+  cJSON_AddStringToObject(root, "AcqFrequency", freq_str);
+  
+  sprintf(freq_str, "%ds", acq_data->upload_frequency);
+  cJSON_AddStringToObject(root, "UploadFrequency", freq_str);
+
+  cJSON_AddNumberToObject(root, "Channel1", WQInterface.Channel[0].connected);
+  cJSON_AddNumberToObject(root, "Channel2", WQInterface.Channel[1].connected);
+  cJSON_AddNumberToObject(root, "Channel3", WQInterface.Channel[2].connected);
+  cJSON_AddNumberToObject(root, "ChannelSensor1", (int)WQInterface.Channel[0].type);
+  cJSON_AddNumberToObject(root, "ChannelSensor2", (int)WQInterface.Channel[1].type);
+  cJSON_AddNumberToObject(root, "ChannelSensor3", (int)WQInterface.Channel[2].type);
+
+  /* 3. 填充 COD 参数 */
+  if (Acq_HasKV(acq_data, "COD")) {
+    sprintf(val_str, "%.2f", Acq_GetVal_FromKV(acq_data, "WTemp")); cJSON_AddStringToObject(root, "WTemp", val_str);
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "COD"));   cJSON_AddStringToObject(root, "COD", val_str);
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "TOC"));   cJSON_AddStringToObject(root, "TOC", val_str);
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "TUR"));   cJSON_AddStringToObject(root, "TUR", val_str);
   } else {
-    sprintf(buffer + strlen(buffer),
-            "\"WTemp\":\"999\",\r\n\"COD\":\"999\",\r\n\"TOC\":\"999\","
-            "\r\n\"TUR\":\"999\",\r\n");
+    cJSON_AddStringToObject(root, "WTemp", "999");
+    cJSON_AddStringToObject(root, "COD", "999");
+    cJSON_AddStringToObject(root, "TOC", "999");
+    cJSON_AddStringToObject(root, "TUR", "999");
   }
 
-  /* ⭐ CDOM连接检查 */
-  if (acq_data->cdom_connected) {
-    sprintf(buffer + strlen(buffer), "\"CDOM\":\"%.6f\",\r\n", acq_data->cdom);
+  /* 4. 填充单参数传感器 */
+  if (Acq_HasKV(acq_data, "CDOM")) {
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "CDOM")); cJSON_AddStringToObject(root, "CDOM", val_str);
+  } else { cJSON_AddStringToObject(root, "CDOM", "999"); }
+
+  if (Acq_HasKV(acq_data, "CHL")) {
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "CHL")); cJSON_AddStringToObject(root, "CHL", val_str);
+  } else { cJSON_AddStringToObject(root, "CHL", "999"); }
+
+  /* 5. 填充 Y4000 参数 */
+  if (Acq_HasKV(acq_data, "Y_PH")) {
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "Y_DO"));  cJSON_AddStringToObject(root, "Y4000DO", val_str);
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "Y_PH"));  cJSON_AddStringToObject(root, "Y4000PH", val_str);
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "Y_SAL")); cJSON_AddStringToObject(root, "Y4000SAL", val_str);
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "Y_ATM")); cJSON_AddStringToObject(root, "Y4000ATM", val_str);
   } else {
-    sprintf(buffer + strlen(buffer), "\"CDOM\":\"999\",\r\n");
+    cJSON_AddStringToObject(root, "Y4000DO", "999");
+    cJSON_AddStringToObject(root, "Y4000PH", "999");
+    cJSON_AddStringToObject(root, "Y4000SAL", "999");
+    cJSON_AddStringToObject(root, "Y4000ATM", "999");
   }
 
-  /* ⭐ CHL连接检查 */
-  if (acq_data->chl_connected) {
-    sprintf(buffer + strlen(buffer), "\"CHL\":\"%.6f\",\r\n", acq_data->chl);
-  } else {
-    sprintf(buffer + strlen(buffer), "\"CHL\":\"999\",\r\n");
-  }
+  if (Acq_HasKV(acq_data, "PH")) {
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "PH")); cJSON_AddStringToObject(root, "PH", val_str);
+  } else { cJSON_AddStringToObject(root, "PH", "999"); }
 
-  /* ⭐ Y4000连接检查 */
-  if (acq_data->y4000_connected) {
-    sprintf(buffer + strlen(buffer),
-            "\"Y4000DO\":\"%.6f\",\r\n\"Y4000PH\":\"%.6f\",\r\n",
-            acq_data->do_val, acq_data->ph);
-    sprintf(buffer + strlen(buffer),
-            "\"Y4000SAL\":\"%.6f\",\r\n\"Y4000ATM\":\"%.6f\",\r\n",
-            acq_data->sal, acq_data->atm);
-  } else {
-    sprintf(buffer + strlen(buffer),
-            "\"Y4000DO\":\"999\",\r\n\"Y4000PH\":\"999\",\r\n\"Y4000SAL\":"
-            "\"999\",\r\n\"Y4000ATM\":\"999\",\r\n");
-  }
+  if (Acq_HasKV(acq_data, "DO")) {
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "DO")); cJSON_AddStringToObject(root, "DO", val_str);
+  } else { cJSON_AddStringToObject(root, "DO", "999"); }
 
-  /* ⭐ 单独传感器连接检查（PH/DO/SAL） */
-  if (acq_data->ph_connected) {
-    sprintf(buffer + strlen(buffer), "\"PH\":\"%.6f\",\r\n", acq_data->ph);
-  } else {
-    sprintf(buffer + strlen(buffer), "\"PH\":\"999\",\r\n");
-  }
+  if (Acq_HasKV(acq_data, "SAL")) {
+    sprintf(val_str, "%.6f", Acq_GetVal_FromKV(acq_data, "SAL")); cJSON_AddStringToObject(root, "SAL", val_str);
+  } else { cJSON_AddStringToObject(root, "SAL", "999"); }
 
-  if (acq_data->do_connected) {
-    sprintf(buffer + strlen(buffer), "\"DO\":\"%.6f\",\r\n", acq_data->do_val);
-  } else {
-    sprintf(buffer + strlen(buffer), "\"DO\":\"999\",\r\n");
-  }
+  /* 6. 生成无缩进的 JSON 字符串 */
+  char *json_out = cJSON_PrintUnformatted(root); 
+  if (json_out != NULL) {
+    /* 为了既保留 cJSON 的安全性，又满足你需要的"竖向单行且无缩进"的格式，做一次极简替换：
+       碰到 '{' 或 ',' 时就在后面加上 \r\n，碰到 '}' 时在前面加上 \r\n */
+    int out_index = 0;
+    
+    /* 配合协议，在最开头加个回车 */
+    buffer[out_index++] = '\r';
+    buffer[out_index++] = '\n';
 
-  if (acq_data->sal_connected) {
-    sprintf(buffer + strlen(buffer), "\"SAL\":\"%.6f\"\r\n}\r\n",
-            acq_data->sal);
+    for (int i = 0; json_out[i] != '\0'; i++) {
+        /* 如果这是 JSON 结尾的括号，先换个行再打括号 */
+        if (json_out[i] == '}') {
+            buffer[out_index++] = '\r';
+            buffer[out_index++] = '\n';
+        }
+
+        /* 正常拷贝字符 */
+        buffer[out_index++] = json_out[i];
+        
+        /* 如果这是大括号或者逗号结尾，直接加换行 */
+        if (json_out[i] == '{' || json_out[i] == ',') {
+            buffer[out_index++] = '\r';
+            buffer[out_index++] = '\n';
+        }
+    }
+    
+    /* 结尾配合协议再补一个回车 */
+    buffer[out_index++] = '\r';
+    buffer[out_index++] = '\n';
+    buffer[out_index] = '\0';
+
+    /* 必须 free 掉 cJSON 吐出来的内存 */
+    cJSON_free(json_out); 
   } else {
-    sprintf(buffer + strlen(buffer), "\"SAL\":\"999\"\r\n}\r\n");
+    buffer[0] = '\0';
   }
+  
+  /* 必须删掉整个树，释放掉所有对象的树节点内存 */
+  cJSON_Delete(root);
 }
 
 /**

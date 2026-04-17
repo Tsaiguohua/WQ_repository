@@ -126,6 +126,7 @@
 ".\obj\u8x8_string.o"
 ".\obj\u8x8_u8toa.o"
 ".\obj\u8x8_u16toa.o"
+".\obj\cjson.o"
 ".\obj\diskio.o"
 ".\obj\ff.o"
 --strict --scatter ".\OBJ\stm32f407.sct"

@@ -70,35 +70,37 @@ static void Format_CSV(char *buffer, uint16_t max_len, acquisition_data_t *acq_d
             acq_data->gps_valid ? "" : "INV_", acq_data->longitude);
             
     // COD 传感器组
-    if(acq_data->cod_connected) {
-        ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,%.4f,%.4f,", acq_data->cod, acq_data->toc, acq_data->tur);
+    if(Acq_HasKV(acq_data, "COD")) {
+        ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,%.4f,%.4f,", 
+               Acq_GetVal_FromKV(acq_data, "COD"), Acq_GetVal_FromKV(acq_data, "TOC"), Acq_GetVal_FromKV(acq_data, "TUR"));
     } else {
         ofs += snprintf(buffer + ofs, max_len - ofs, "999,999,999,");
     }
     
     // CDOM 
-    if(acq_data->cdom_connected) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", acq_data->cdom);
+    if(Acq_HasKV(acq_data, "CDOM")) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", Acq_GetVal_FromKV(acq_data, "CDOM"));
     else ofs += snprintf(buffer + ofs, max_len - ofs, "999,");
     
     // CHL
-    if(acq_data->chl_connected) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", acq_data->chl);
+    if(Acq_HasKV(acq_data, "CHL")) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", Acq_GetVal_FromKV(acq_data, "CHL"));
     else ofs += snprintf(buffer + ofs, max_len - ofs, "999,");
     
     // Y4000
-    if(acq_data->y4000_connected) {
-        ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,%.4f,%.4f,", acq_data->do_val, acq_data->ph, acq_data->sal);
+    if(Acq_HasKV(acq_data, "Y_PH")) {
+        ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,%.4f,%.4f,", 
+               Acq_GetVal_FromKV(acq_data, "Y_DO"), Acq_GetVal_FromKV(acq_data, "Y_PH"), Acq_GetVal_FromKV(acq_data, "Y_SAL"));
     } else {
         ofs += snprintf(buffer + ofs, max_len - ofs, "999,999,999,");
     }
     
     // 独立传感器 PH, DO, SAL
-    if(acq_data->ph_connected) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", acq_data->ph);
+    if(Acq_HasKV(acq_data, "PH")) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", Acq_GetVal_FromKV(acq_data, "PH"));
     else ofs += snprintf(buffer + ofs, max_len - ofs, "999,");
     
-    if(acq_data->do_connected) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", acq_data->do_val);
+    if(Acq_HasKV(acq_data, "DO")) ofs += snprintf(buffer + ofs, max_len - ofs, "%.4f,", Acq_GetVal_FromKV(acq_data, "DO"));
     else ofs += snprintf(buffer + ofs, max_len - ofs, "999,");
     
-    if(acq_data->sal_connected) snprintf(buffer + ofs, max_len - ofs, "%.4f\r\n", acq_data->sal); // 最后一列换行
+    if(Acq_HasKV(acq_data, "SAL")) snprintf(buffer + ofs, max_len - ofs, "%.4f\r\n", Acq_GetVal_FromKV(acq_data, "SAL")); // 最后一列换行
     else snprintf(buffer + ofs, max_len - ofs, "999\r\n"); // 最后一列换行
 }
 
@@ -122,13 +124,13 @@ static void Format_TXT(char *buffer, uint16_t max_len, acquisition_data_t *acq_d
     
     // 水质详情
     snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "水质传感器读取详情:\r\n");
-    if(acq_data->cod_connected) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - COD: %.3f | TOC: %.3f | 浊度: %.3f\r\n", acq_data->cod, acq_data->toc, acq_data->tur);
-    if(acq_data->cdom_connected) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - CDOM: %.3f\r\n", acq_data->cdom);
-    if(acq_data->chl_connected) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 叶绿素: %.3f\r\n", acq_data->chl);
-    if(acq_data->y4000_connected) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - Y4000集成: 溶氧 %.3f | PH %.3f | 盐度 %.3f\r\n", acq_data->do_val, acq_data->ph, acq_data->sal);
-    if(acq_data->ph_connected) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立PH: %.3f\r\n", acq_data->ph);
-    if(acq_data->do_connected) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立溶氧: %.3f\r\n", acq_data->do_val);
-    if(acq_data->sal_connected) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立盐度: %.3f\r\n", acq_data->sal);
+    if(Acq_HasKV(acq_data, "COD")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - COD: %.3f | TOC: %.3f | 浊度: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "COD"), Acq_GetVal_FromKV(acq_data, "TOC"), Acq_GetVal_FromKV(acq_data, "TUR"));
+    if(Acq_HasKV(acq_data, "CDOM")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - CDOM: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "CDOM"));
+    if(Acq_HasKV(acq_data, "CHL")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 叶绿素: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "CHL"));
+    if(Acq_HasKV(acq_data, "Y_PH")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - Y4000集成: 溶氧 %.3f | PH %.3f | 盐度 %.3f\r\n", Acq_GetVal_FromKV(acq_data, "Y_DO"), Acq_GetVal_FromKV(acq_data, "Y_PH"), Acq_GetVal_FromKV(acq_data, "Y_SAL"));
+    if(Acq_HasKV(acq_data, "PH")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立PH: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "PH"));
+    if(Acq_HasKV(acq_data, "DO")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立溶氧: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "DO"));
+    if(Acq_HasKV(acq_data, "SAL")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立盐度: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "SAL"));
     
     snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "=========================================================\r\n\r\n");
 }

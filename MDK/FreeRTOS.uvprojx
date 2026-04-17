@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\APP;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\SYSTEM\IIC;..\SYSTEM\SPI;..\SYSTEM\rs485;..\Firmware\driver\inc;..\Firmware\driver\src;..\Firmware\cmsis\core;..\Firmware\cmsis\device;..\Third_lib\FreeRTOS\include;..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F;..\Driver\AHT20;..\Driver\CDOM;..\Driver\CHL;..\Driver\COD;..\Driver\DO;..\Driver\GPS;..\Driver\LED;..\Driver\PH;..\Driver\SAL;..\Driver\Y4000;..\SYSTEM\Modbus;..\Driver\Buzzer;..\Driver\SelfExam;..\Driver\OLED;..\Driver\Voltage;..\Third_lib\U8g2;..\Driver\Button;..\SYSTEM\Flash;..\Driver\Watchdog;..\SYSTEM\uart4;..\Driver\OTA;..\Driver\W25Q128;..\User;..\User\Tasks;..\User\MidFunc;..\Third_lib\FatFs;..\Driver\TF;..\SYSTEM\sdio_sdcard</IncludePath>
+              <IncludePath>..\APP;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\SYSTEM\IIC;..\SYSTEM\SPI;..\SYSTEM\rs485;..\Firmware\driver\inc;..\Firmware\driver\src;..\Firmware\cmsis\core;..\Firmware\cmsis\device;..\Third_lib\FreeRTOS\include;..\Third_lib\FreeRTOS\portable\RVDS\ARM_CM4F;..\Driver\AHT20;..\Driver\CDOM;..\Driver\CHL;..\Driver\COD;..\Driver\DO;..\Driver\GPS;..\Driver\LED;..\Driver\PH;..\Driver\SAL;..\Driver\Y4000;..\SYSTEM\Modbus;..\Driver\Buzzer;..\Driver\SelfExam;..\Driver\OLED;..\Driver\Voltage;..\Third_lib\U8g2;..\Driver\Button;..\SYSTEM\Flash;..\Driver\Watchdog;..\SYSTEM\uart4;..\Driver\OTA;..\Driver\W25Q128;..\User;..\User\Tasks;..\User\MidFunc;..\Third_lib\FatFs;..\Driver\TF;..\SYSTEM\sdio_sdcard;..\Third_lib\cJSON</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1049,6 +1049,11 @@
               <FileName>u8x8_u16toa.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Third_lib\U8g2\u8x8_u16toa.c</FilePath>
+            </File>
+            <File>
+              <FileName>cJSON.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Third_lib\cJSON\cJSON.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -28,15 +28,28 @@
 static SemaphoreHandle_t g_uart4_tx_mutex = NULL;
 
 
+/* =========================================================================
+ * 辅助函数：将传感器读数压入系统的 KV 数组中
+ * ========================================================================= */
+static void Push_KVNode(acquisition_data_t *acq, const char *key, float value) {
+    if (acq->current_node_count < MAX_WATER_PARAMS) {
+        strncpy(acq->water_nodes[acq->current_node_count].key, key, 11);
+        acq->water_nodes[acq->current_node_count].key[11] = '\0';
+        acq->water_nodes[acq->current_node_count].value = value;
+        acq->water_nodes[acq->current_node_count].is_valid = true;
+        acq->current_node_count++;
+    }
+}
+
 #if WQ_USE_SENSOR_COD
 static uint8_t WQ_COD_GetData(void *out) {
     cod_data_t raw;
     acquisition_data_t *acq = (acquisition_data_t *)out;
     if (cod_read(&raw)) {
-        acq->cod        = raw.cod;
-        acq->water_temp = raw.temp;
-        acq->toc        = raw.toc;
-        acq->tur        = raw.tur;
+        Push_KVNode(acq, "WTemp", raw.temp);
+        Push_KVNode(acq, "COD", raw.cod);
+        Push_KVNode(acq, "TOC", raw.toc);
+        Push_KVNode(acq, "TUR", raw.tur);
         return 1;
     }
     return 0;
@@ -48,10 +61,10 @@ static uint8_t WQ_Y4000_GetData(void *out) {
     y4000_data_t raw;
     acquisition_data_t *acq = (acquisition_data_t *)out;
     if (y4000_read(&raw)) {
-        acq->ph     = raw.ph_value;
-        acq->do_val = raw.do_value;
-        acq->sal    = raw.sal_value;
-        acq->atm    = raw.atm_value;
+        Push_KVNode(acq, "Y_PH", raw.ph_value);
+        Push_KVNode(acq, "Y_DO", raw.do_value);
+        Push_KVNode(acq, "Y_SAL", raw.sal_value);
+        Push_KVNode(acq, "Y_ATM", raw.atm_value);
         return 1;
     }
     return 0;
@@ -62,7 +75,7 @@ static uint8_t WQ_Y4000_GetData(void *out) {
 static uint8_t WQ_CDOM_GetData(void *out){
 	float cdom_val;
 	if(cdom_read(&cdom_val)){
-		((acquisition_data_t*)out)->cdom=cdom_val;
+		Push_KVNode((acquisition_data_t*)out, "CDOM", cdom_val);
 		return 1;
 	}
 	return 0;
@@ -73,19 +86,18 @@ static uint8_t WQ_CDOM_GetData(void *out){
 static uint8_t WQ_CHL_GetData(void *out){
 	float chl_val;
 	if(chl_read(&chl_val)){
-		((acquisition_data_t*)out)->chl=chl_val;
+		Push_KVNode((acquisition_data_t*)out, "CHL", chl_val);
 		return 1;
 	}
 	return 0;
 }
 #endif
 
-
 #if WQ_USE_SENSOR_PH
 static uint8_t WQ_PH_GetData(void *out){
 	float ph_val;
 	if(ph_read(&ph_val)){
-		((acquisition_data_t*)out)->ph=ph_val;
+		Push_KVNode((acquisition_data_t*)out, "PH", ph_val);
 		return 1;
 	}
 	return 0;
@@ -96,7 +108,7 @@ static uint8_t WQ_PH_GetData(void *out){
 static uint8_t WQ_DO_GetData(void *out){
 	float do_val;
 	if(do_read(&do_val)){
-		((acquisition_data_t*)out)->do_val=do_val;
+		Push_KVNode((acquisition_data_t*)out, "DO", do_val);
 		return 1;
 	}
 	return 0;
@@ -107,7 +119,7 @@ static uint8_t WQ_DO_GetData(void *out){
 static uint8_t WQ_SAL_GetData(void *out){
 	float sal_val;
 	if(sal_read(&sal_val)){
-		((acquisition_data_t*)out)->sal=sal_val;
+		Push_KVNode((acquisition_data_t*)out, "SAL", sal_val);
 		return 1;
 	}
 	return 0;

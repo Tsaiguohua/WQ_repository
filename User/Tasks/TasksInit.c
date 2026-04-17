@@ -12,6 +12,7 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "cJSON.h"
 #include <stdio.h>
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +96,12 @@ EventGroupHandle_t g_system_events = NULL;
 void User_Tasks_Init(void) {
  
     printf("\r\n========== Creating FreeRTOS Tasks ==========\r\n");
+
+    /* 初始化 cJSON 内存钩子：让 cJSON 强制使用 FreeRTOS 那 80KB 的超大堆 */
+    cJSON_Hooks hooks;
+    hooks.malloc_fn = pvPortMalloc;
+    hooks.free_fn = vPortFree;
+    cJSON_InitHooks(&hooks);
 
     /*------------------------------------------------------------------
      * 第一步：创建任务间通信对象
