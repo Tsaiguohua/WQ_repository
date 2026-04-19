@@ -17,5 +17,5 @@ uint8_t TF_Hardware_Init(void);
  * @retval 0=成功，1=失败
  */
 uint8_t TF_Append_String(const char* filename, const char* str);
-
+uint8_t TF_Force_CSV_Header(const char* filename, const char* header_str);
 #endif

@@ -1,3 +1,17 @@
+/**
+ * @file    UpLoadTask.c
+ * @author  Antigravity Refactor Team
+ * @brief   MQTT 数据上传任务 (Cloud Synchronization)
+ * @version 2.0 (JSON Refactored)
+ * @date    2026-04-19
+ *
+ * @details 
+ *   本任务负责将采集数据编码为 JSON 报文并通过 4G/NB-IoT 模块上传至云端。
+ *   - 数据快照：使用 memcpy 机制获取采集副本，防止同步阻塞。
+ *   - 状态隔离：OTA 升级期间自动挂起本任务，确保串口 (UART4) 控制权唯一性。
+ *   - JSON 构建：采用 cJSON 库动态构建报文，表项匹配 KV 存储结构。
+ */
+
 #include "UpLoadTask.h"
 #include "WQInterface.h"
 #include "AcqTask.h"      

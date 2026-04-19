@@ -1,3 +1,17 @@
+/**
+ * @file    TasksInit.c
+ * @author  Antigravity Refactor Team
+ * @brief   系统业务初始化与任务协调层
+ * @version 2.0
+ * @date    2026-04-19
+ *
+ * @details 
+ *   本模块是 FreeRTOS 业务逻辑的“总调度站”。
+ *   - 资源创建：初始化所有互斥锁 (Mutex)、信号量 (Semaphore) 和事件组。
+ *   - 任务创建：按优先级顺序启动采集、上传、指令、写卡等核心任务。
+ *   - 架构对齐：在任务启动前强制调用 WQ_Interface_Init() 确保底层资源就绪。
+ */
+
 #include "TasksInit.h"
 #include "HardwareInitTask.h"
 #include "AcqTask.h"
@@ -8,6 +22,7 @@
 #include "OLEDTask.h"
 #include "GPSTask.h"
 #include "HeartBeatTask.h"
+#include "WQInterface.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -95,6 +110,9 @@ EventGroupHandle_t g_system_events = NULL;
  */
 void User_Tasks_Init(void) {
  
+    /* ★ 最优先：提前创建 UART4 互斥锁，防止多任务并发懒创建 Bug */
+    WQ_Interface_Init();
+
     printf("\r\n========== Creating FreeRTOS Tasks ==========\r\n");
 
     /* 初始化 cJSON 内存钩子：让 cJSON 强制使用 FreeRTOS 那 80KB 的超大堆 */

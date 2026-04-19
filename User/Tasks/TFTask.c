@@ -1,3 +1,17 @@
+/**
+ * @file    TFTask.c
+ * @author  Antigravity Refactor Team
+ * @brief   本地 SD 卡数据存储任务 (Logging & CSV Support)
+ * @version 2.0 (Refactored)
+ * @date    2026-04-19
+ *
+ * @details 
+ *   本任务负责将实时采集的数据持久化存储到本地 SD 卡。
+ *   - CSV 存储：文件名 Record.csv，表头已国际化为全英文，彻底解决 Excel 乱码问题。
+ *   - TXT 存储：文件名 Detail.txt，存储优雅、易读的格式化水质日志。
+ *   - 数据快照：通过互斥锁获取采集副本，写卡过程不阻塞传感器采集。
+ */
+
 #include "TFTask.h"
 #include "WQInterface.h"
 #include "AcqTask.h"
@@ -110,29 +124,29 @@ static void Format_CSV(char *buffer, uint16_t max_len, acquisition_data_t *acq_d
 static void Format_TXT(char *buffer, uint16_t max_len, acquisition_data_t *acq_data) {
     buffer[0] = '\0';
     
-    snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "========== 记录时间: %04d/%02d/%02d %02d:%02d:%02d ==========\r\n",
+    snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "========== Record Time: %04d/%02d/%02d %02d:%02d:%02d ==========\r\n",
              acq_data->year, acq_data->month, acq_data->day, acq_data->hour, acq_data->min, acq_data->sec);
              
-    snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "环境 >> 电池:%d%% | 温度:%.1fC | 湿度:%.1f%%\r\n", 
+    snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "ENV  >> Battery:%d%% | Temp:%.1fC | Humi:%.1f%%\r\n", 
              acq_data->battery, acq_data->env_temp, acq_data->env_humi);
              
     if (acq_data->gps_valid) {
-        snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "GPS  >> 纬度:%.6f | 经度:%.6f\r\n", acq_data->latitude, acq_data->longitude);
+        snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "GPS  >> Lat:%.6f | Lon:%.6f\r\n", acq_data->latitude, acq_data->longitude);
     } else {
-        snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "GPS  >> 无定位信号\r\n");
+        snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "GPS  >> No signal\r\n");
     }
     
-    // 水质详情
-    snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "水质传感器读取详情:\r\n");
-    if(Acq_HasKV(acq_data, "COD")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - COD: %.3f | TOC: %.3f | 浊度: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "COD"), Acq_GetVal_FromKV(acq_data, "TOC"), Acq_GetVal_FromKV(acq_data, "TUR"));
+    snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "Water Sensor Data:\r\n");
+    if(Acq_HasKV(acq_data, "COD")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - COD: %.3f | TOC: %.3f | TUR: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "COD"), Acq_GetVal_FromKV(acq_data, "TOC"), Acq_GetVal_FromKV(acq_data, "TUR"));
     if(Acq_HasKV(acq_data, "CDOM")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - CDOM: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "CDOM"));
-    if(Acq_HasKV(acq_data, "CHL")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 叶绿素: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "CHL"));
-    if(Acq_HasKV(acq_data, "Y_PH")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - Y4000集成: 溶氧 %.3f | PH %.3f | 盐度 %.3f\r\n", Acq_GetVal_FromKV(acq_data, "Y_DO"), Acq_GetVal_FromKV(acq_data, "Y_PH"), Acq_GetVal_FromKV(acq_data, "Y_SAL"));
-    if(Acq_HasKV(acq_data, "PH")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立PH: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "PH"));
-    if(Acq_HasKV(acq_data, "DO")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立溶氧: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "DO"));
-    if(Acq_HasKV(acq_data, "SAL")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - 独立盐度: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "SAL"));
+    if(Acq_HasKV(acq_data, "CHL")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - CHL: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "CHL"));
+    if(Acq_HasKV(acq_data, "Y_PH")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - Y4000: DO %.3f | PH %.3f | SAL %.3f\r\n", Acq_GetVal_FromKV(acq_data, "Y_DO"), Acq_GetVal_FromKV(acq_data, "Y_PH"), Acq_GetVal_FromKV(acq_data, "Y_SAL"));
+    if(Acq_HasKV(acq_data, "PH")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - PH: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "PH"));
+    if(Acq_HasKV(acq_data, "DO")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - DO: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "DO"));
+    if(Acq_HasKV(acq_data, "SAL")) snprintf(buffer + strlen(buffer), max_len - strlen(buffer), " - SAL: %.3f\r\n", Acq_GetVal_FromKV(acq_data, "SAL"));
     
     snprintf(buffer + strlen(buffer), max_len - strlen(buffer), "=========================================================\r\n\r\n");
+
 }
 
 /**
@@ -148,7 +162,7 @@ void TF_Task(void *pvParameters) {
     printf("[TFTask] Started. Waiting to write to SD Card...\r\n");
 
     // 确保 CSV 表头已写入
-    const char *csv_header = "日期,时间,电量(%),环境温度(C),环境湿度(%),纬度,经度,COD,TOC,浊度,CDOM,叶绿素,Y4000_溶氧,Y4000_pH,Y4000_盐度,独立_pH,独立_溶氧,独立_盐度\r\n";
+    const char *csv_header = "Date,Time,Battery(%),EnvTemp(C),EnvHumi(%),Latitude,Longitude,COD,TOC,TUR,CDOM,CHL,Y4000_DO,Y4000_pH,Y4000_SAL,PH,DO,SAL\r\n";
     if (WQInterface.Storage.WriteCSVHeader) {
         WQInterface.Storage.WriteCSVHeader(csv_header);
     }

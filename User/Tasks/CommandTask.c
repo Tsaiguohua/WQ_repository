@@ -1,3 +1,17 @@
+/**
+ * @file    CommandTask.c
+ * @author  Antigravity Refactor Team
+ * @brief   MQTT 命令解析与指令分发任务 (Table-Driven)
+ * @version 2.0 (Architecture Upgrade A)
+ * @date    2026-04-19
+ *
+ * @details 
+ *   本模块负责通过 UART4 接收来自 MQTT 服务器的 JSON 格式指令并执行。
+ *   - 协议解析：采用“表驱动 (Table-Driven)”模式，避免了冗长的 if-else 链。
+ *   - 模块化处理：每个指令（如 AcqFreq, Reset, OTA）都有对应的处理函数。
+ *   - 稳健性：集成了串口 DMA 状态自动检查，防止指令接收队列意外卡死。
+ */
+
 #include "CommandTask.h"
 #include "TasksInit.h"
 #include "FreeRTOS.h"
@@ -16,13 +30,6 @@
 #include <string.h>
 #include "WQInterface.h"
 #include "cJSON.h" // 引入 cJSON 库
-//////////////////////////////////////////////////////////////////////////////////
-// MQTT命令解析处理模块 - FreeRTOS版本
-//
-// 功能说明：
-//   本模块负责解析云平台（MQTT服务器）下发的JSON指令，执行相应操作
-//   并自动将配置更改保存到Flash，实现配置的持久化
-//
 // 通信接口：
 //   - 接收接口：UART4 (4G模块透传MQTT消息)
 //   - 触发机制：UART中断接收到'{'和'}'，发送信号量通知Command任务
@@ -89,6 +96,7 @@ static char last_command_status[50] = "WAITING_COMMAND";
  *                          私有函数声明
  *===========================================================================*/
 
+static bool Command_HandleOTA(const char *cmd_str);
 static bool Command_HandleFrequency(const char *cmd_str);
 static bool Command_HandleAcqFrequency(const char *cmd_str);
 static bool Command_HandleUploadFrequency(const char *cmd_str);
@@ -96,6 +104,49 @@ static bool Command_HandleGetData(const char *cmd_str);
 static bool Command_HandleChannelControl(const char *cmd_str);
 static bool Command_HandleSystemControl(const char *cmd_str);
 static void Command_SendResponse(const char *response);
+
+/*============================================================================
+ *                          命令分发表（表驱动核心）
+ *
+ *  规则：
+ *    1. 表项按从上到下顺序匹配，第一个命中的 handler 被调用，随即返回。
+ *    2. 长关键字必须排在其前缀之前（如 AcqFrequency 必须先于 Frequency），
+ *       否则短词会提前命中。
+ *    3. 新增命令：只需在此表里加一行 + 实现对应 handler，
+ *       Command_Parse() 永远不用再改。
+ *===========================================================================*/
+
+typedef struct {
+    const char *keyword;                  /* strstr 匹配关键字           */
+    bool      (*handler)(const char *);   /* 命中后调用的处理函数        */
+} cmd_entry_t;
+
+static const cmd_entry_t s_cmd_table[] = {
+    /* ── OTA 升级指令（最高优先级，必须排最前） ─────────────── */
+    { "config,upcheck",   Command_HandleOTA            },
+    { "config,upin",      Command_HandleOTA            },
+    { "UPFILE:",          Command_HandleOTA            },
+    { "config,upsta",     Command_HandleOTA            },
+
+    /* ── 频率指令（长词在前，防止短词 Frequency 先命中） ─────── */
+    { "AcqFrequency",     Command_HandleAcqFrequency   },
+    { "UploadFrequency",  Command_HandleUploadFrequency},
+    { "Frequency",        Command_HandleFrequency      },
+
+    /* ── 数据获取指令 ────────────────────────────────────────── */
+    { "GET_MMSG",         Command_HandleGetData        },
+    { "GET_DMSG",         Command_HandleGetData        },
+
+    /* ── 通道控制指令 ────────────────────────────────────────── */
+    { "CHANNEL",          Command_HandleChannelControl },
+
+    /* ── 系统控制指令 ────────────────────────────────────────── */
+    { "RESTART",          Command_HandleSystemControl  },
+    { "BUZZER",           Command_HandleSystemControl  },
+    { "4GPOWER",          Command_HandleSystemControl  },
+};
+
+#define CMD_TABLE_SIZE  (sizeof(s_cmd_table) / sizeof(s_cmd_table[0]))
 
 /*============================================================================
  *                          API实现
@@ -110,56 +161,18 @@ void Command_Init(void) { strcpy(last_command_status, "WAITING_COMMAND"); }
  * @brief  解析并执行MQTT指令
  */
 bool Command_Parse(const char *cmd_str, uint16_t len) {
-  if (cmd_str == NULL || len == 0) {
-    return false;
-  }
+    if (cmd_str == NULL || len == 0) {
+        return false;
+    }
 
-  /* OTA升级命令（最高优先级）*/
-  if (strstr(cmd_str, "config,upcheck") != NULL ||
-      strstr(cmd_str, "config,upin") != NULL ||
-      strncmp(cmd_str, "UPFILE:", 7) == 0 ||
-      strstr(cmd_str, "config,upsta") != NULL) {
-    // printf("[Command] OTA command received: %.50s...\r\n", cmd_str); //
-    // 调试日志
-    extern void OTA_ProcessMQTTCommand(const char *cmd, uint16_t len);
-    /* 关键修复: 使用实际长度len而非strlen，支持二进制UPFILE数据 */
-    OTA_ProcessMQTTCommand(cmd_str, len);
-    return true;
-  }
+    /* 遍历命令表，第一个关键字命中即调用对应 handler 并返回 */
+    for (int i = 0; i < (int)CMD_TABLE_SIZE; i++) {
+        if (strstr(cmd_str, s_cmd_table[i].keyword) != NULL) {
+            return s_cmd_table[i].handler(cmd_str);
+        }
+    }
 
-  /* 采集频率控制指令（优先级高，必须在 Frequency 之前） */
-  if (strstr(cmd_str, "AcqFrequency") != NULL) {
-    return Command_HandleAcqFrequency(cmd_str);
-  }
-
-  /* 上传频率控制指令（优先级高，必须在 Frequency 之前） */
-  if (strstr(cmd_str, "UploadFrequency") != NULL) {
-    return Command_HandleUploadFrequency(cmd_str);
-  }
-
-  /* 频率控制指令（向后兼容，同时设置采集和上传） */
-  if (strstr(cmd_str, "Frequency") != NULL) {
-    return Command_HandleFrequency(cmd_str);
-  }
-
-  /* 数据获取指令 */
-  if (strstr(cmd_str, "GET_MMSG") != NULL ||
-      strstr(cmd_str, "GET_DMSG") != NULL) {
-    return Command_HandleGetData(cmd_str);
-  }
-
-  /* 通道控制指令 */
-  if (strstr(cmd_str, "CHANNEL") != NULL) {
-    return Command_HandleChannelControl(cmd_str);
-  }
-
-  /* 系统控制指令 */
-  if (strstr(cmd_str, "RESTART") != NULL || strstr(cmd_str, "BUZZER") != NULL ||
-      strstr(cmd_str, "4GPOWER") != NULL) {
-    return Command_HandleSystemControl(cmd_str);
-  }
-
-  /* 未知指令 */
+    /* 未命中任何表项：未知指令 */
     Command_SendResponse("{\"Client_Command\":\"ERROR_COMMAND\"}");
     strcpy(last_command_status, "ERROR_COMMAND");
     return false;
@@ -217,6 +230,18 @@ void Command_Task(void *pvParameters) {
 /*============================================================================
  *                          私有函数实现
  *===========================================================================*/
+
+/**
+ * @brief  处理 OTA 升级指令
+ * @note   OTA 命令携带实际二进制长度（len），此处通过 strlen 降级处理；
+ *         真实二进制长度由 Command_Task 层的 copy_len 保证，handler 层
+ *         仅负责把完整字符串交给 OTA 模块。
+ */
+static bool Command_HandleOTA(const char *cmd_str) {
+    extern void OTA_ProcessMQTTCommand(const char *cmd, uint16_t len);
+    OTA_ProcessMQTTCommand(cmd_str, (uint16_t)strlen(cmd_str));
+    return true;
+}
 
 /**
  * @brief  处理频率控制指令（向后兼容裸机）

@@ -1,65 +1,25 @@
 //////////////////////////////////////////////////////////////////////////////////
-// OTA固件升级模块实现 - FreeRTOS版本
+// OTA固件升级模块实现 - FreeRTOS版本 (Refactored)
 //
 // 本文件实现OTA（Over-The-Air）固件升级的核心逻辑，包括：
-//   1. 状态机管理（IDLE、CHECKING、ERASING、DOWNLOADING、COMPLETE）
-//   2. MQTT指令解析（config,upin / upfile,data / upfile,end）
-//   3. Base64数据解码和Flash写入
-//   4. FreeRTOS任务暂停/恢复（防止SPI/UART4总线冲突）
-//   5. 下载超时检测（60秒无数据自动退出）
-//   6. 与Bootloader协作（写入OTA标志后重启）
+//   1. 状态机管理（IDLE, CHECKING, DOWNLOADING, COMPLETE）
+//   2. MQTT指令解析（upcheck / upin / UPFILE数据包）
+//   3. Base64数据解码与 W25Q128 Flash 扇区化写入
+//   4. 资源封锁机制：OTA期间自动挂起上传、采集等高并发任务，防止总线冲突
+//   5. 健壮性：新增 CHECKING 状态 10s 超时保护，防止非法服务器回复导致系统卡死
 //
 // 关键实现细节：
 //   ▶ 任务暂停机制：
-//     - 收到"config,upin,ok"后立即调用OTA_SuspendOtherTasks()
-//     - 暂停：采集、上传、APP业务、OLED、心跳、看门狗任务
-//     - 目的：防止UART4被Upload/Heartbeat占用，防止SPI被其他模块使用
-//     - 恢复：超时或OTA完成后调用OTA_ResumeOtherTasks()
+//     - 收到"config,upin,ok"后调用 OTA_SuspendOtherTasks()
+//     - 暂停：采集、上传、业务、OLED、心跳、看门狗任务
+//     - 目的：确保 UART4 与 SPI1 总线在升级期间的独占访问
 //
-//   ▶ Flash写入优化：
-//     - 使用256字节页缓冲，累积满一页后一次性写入
-//     - 减少SPI通信次数，提高写入速度
-//     - 每次写入前自动4KB对齐擦除（W25Q128最小擦除单位）
-//
-//   ▶ 数据包处理流程：
-//     1. 接收"upfile,data,<Base64>,<序号>"
-//     2. Base64解码 → 二进制数据（最大1KB）
-//     3. 写入页缓冲，满256字节就写入Flash
-//     4. 更新下载进度，打印百分比（每10%打印一次）
-//
-//   ▶ 超时保护：
-//     - 每次收到数据包更新g_last_data_time
-//     - OTA_Task每100ms检查一次
-//     - 超过60秒无数据 → 认为通信失败 → 恢复任务并退回IDLE
-//
-//   ▶ 升级完成流程：
-//     1. 收到"upfile,end,<总大小>"
-//     2. 验证下载大小是否匹配
-//     3. 写入OTA标志(0xAA55AA55)和固件长度到Flash
-//     4. 回复"upfile,ok,success"
-//     5. 延时3秒后调用NVIC_SystemReset()重启
-//     6. Bootloader检测标志，开始固件搬运
-//
-// FreeRTOS资源：
-//   - g_w25q_mutex: W25Q128 SPI总线互斥锁（防止多任务冲突）
-//   - OTA_Task: 优先级5，每30秒主动查询一次固件更新
-//
-// 安全考虑：
-//   ✓ 互斥锁保护SPI总线访问
-//   ✓ 任务暂停防止UART4/SPI冲突
-//   ✓ 超时检测防止OTA卡死
-//   ✓ 大小验证防止数据不完整
-//   ⚠️ 当前未实现CRC校验（可扩展）
-//   ⚠️ 断电保护依赖Bootloader的回滚机制
-//
-// 注意事项：
-//   ⚠️ OTA_Task中有自动查询逻辑（每30秒），可能产生不必要的流量
-//   ⚠️ 写入Flash前必须先擦除，当前按4KB扇区擦除
-//   ⚠️ 看门狗在OTA期间被暂停，如果OTA任务死机无法检测
+//   ▶ 下载保护：
+//     - 60秒无数据自动退出下载模式并恢复系统任务
+//     - 下载完成后由 Bootloader 负责固件校验与 APP 区域覆盖安装
 //
 // 创建日期: 2026/01/28
-// 作者: 蔡国华
-// 最后更新: 2026/02/02 (新增6任务暂停机制，包含看门狗)
+// 重构日期: 2026/04/19 (新增状态机超时保护与架构对齐)
 //////////////////////////////////////////////////////////////////////////////////
 
 #include "ota.h"
@@ -88,7 +48,8 @@ static uint32_t g_erase_sector_count = 0; // 需要擦除的扇区数
 static uint32_t g_erased_sectors = 0;     // 已擦除的扇区数
 
 // 超时检测
-static uint32_t g_last_data_time = 0; // 最后一次接收数据的时间（tick）
+static uint32_t g_last_data_time = 0;     // 最后一次接收数据的时间（tick）
+static uint32_t g_checking_start_time = 0; // 进入 CHECKING 状态的时间（tick）
 
 // 任务管理（OTA期间暂停其他任务）
 static TaskHandle_t g_acquisition_task_handle = NULL;
@@ -561,16 +522,23 @@ void OTA_Task(void *pvParameters) {
           last_check_time = current_time;
 
           printf("[OTA] Auto requesting firmware version check...\r\n");
-          // 改为发送upcheck查询版本（而不是直接upin）
           OTA_SendCommand("config,get,upcheck\r\n");
-          g_ota_state = OTA_STATE_CHECKING; // 转到CHECKING状态等待upcheck回复
+          g_ota_state = OTA_STATE_CHECKING;
+          g_checking_start_time = xTaskGetTickCount(); // 记录进入 CHECKING 的时刻
         }
       }
       vTaskDelay(pdMS_TO_TICKS(1000));
       break;
 
     case OTA_STATE_CHECKING:
-      // 版本检查完成，等待upin命令
+      // 版本查询已发出，等待服务器回复 "config,upcheck,ok"
+      // ★ 关键修复：加 10 秒超时保护，防止服务器回复 error 或无回复时
+      //   g_ota_state 永远停在 CHECKING，导致 UploadTask/TFTask 被永久封啓。
+      if ((xTaskGetTickCount() - g_checking_start_time) > pdMS_TO_TICKS(10000)) {
+          printf("[OTA] Version check timeout (10s), server no valid response. "
+                 "Back to IDLE.\r\n");
+          g_ota_state = OTA_STATE_IDLE;
+      }
       vTaskDelay(pdMS_TO_TICKS(100));
       break;
 
@@ -612,48 +580,50 @@ void OTA_Task(void *pvParameters) {
       break;
 
     case OTA_STATE_COMPLETE:
-      // 下载完成，设置OTA标志并重启
-      printf("[OTA] Setting OTA flag and rebooting...\r\n");
+      {
+        // 下载完成，设置OTA标志并重启
+        printf("[OTA] Setting OTA flag and rebooting...\r\n");
 
-      // 写入OTA标志
-      // ⚠️ 必须先擦除Sector 0！防止原来的数据干扰
-      xSemaphoreTake(g_w25q_mutex, portMAX_DELAY);
-      W25Q128_SectorErase_4K(0x000000); // 擦除第一个4KB扇区
+        // 写入OTA标志
+        // ⚠️ 必须先擦除Sector 0！防止原来的数据干扰
+        xSemaphoreTake(g_w25q_mutex, portMAX_DELAY);
+        W25Q128_SectorErase_4K(0x000000); // 擦除第一个4KB扇区
 
-      uint32_t ota_flag = OTA_FLAG_MAGIC_WORD;
-      W25Q128_PageProgram(OTA_FLAG_ADDRESS, (uint8_t *)&ota_flag, 4);
-
-      // ⚠️ 立即回读验证
-      uint32_t check_flag = 0;
-      W25Q128_ReadData(OTA_FLAG_ADDRESS, (uint8_t *)&check_flag, 4);
-      if (check_flag != OTA_FLAG_MAGIC_WORD) {
-        printf("[OTA] ERROR: Failed to write OTA flag! Read: 0x%08X, Expected: "
-               "0x%08X\r\n",
-               check_flag, OTA_FLAG_MAGIC_WORD);
-        // 再次尝试擦除写入
-        W25Q128_SectorErase_4K(0x000000);
+        uint32_t ota_flag = OTA_FLAG_MAGIC_WORD;
         W25Q128_PageProgram(OTA_FLAG_ADDRESS, (uint8_t *)&ota_flag, 4);
-      } else {
-        printf("[OTA] OTA flag verified OK: 0x%08X\r\n", check_flag);
+
+        // ⚠️ 立即回读验证
+        uint32_t check_flag = 0;
+        W25Q128_ReadData(OTA_FLAG_ADDRESS, (uint8_t *)&check_flag, 4);
+        if (check_flag != OTA_FLAG_MAGIC_WORD) {
+          printf("[OTA] ERROR: Failed to write OTA flag! Read: 0x%08X, Expected: "
+                 "0x%08X\r\n",
+                 check_flag, OTA_FLAG_MAGIC_WORD);
+          // 再次尝试擦除写入
+          W25Q128_SectorErase_4K(0x000000);
+          W25Q128_PageProgram(OTA_FLAG_ADDRESS, (uint8_t *)&ota_flag, 4);
+        } else {
+          printf("[OTA] OTA flag verified OK: 0x%08X\r\n", check_flag);
+        }
+
+        xSemaphoreGive(g_w25q_mutex);
+
+        // 写入固件长度
+        printf("[OTA] Writing firmware length: %lu bytes\r\n", g_firmware_size);
+        xSemaphoreTake(g_w25q_mutex, portMAX_DELAY);
+        W25Q128_PageProgram(OTA_FW_LENGTH_ADDRESS, (uint8_t *)&g_firmware_size, 4);
+        xSemaphoreGive(g_w25q_mutex);
+
+        vTaskDelay(pdMS_TO_TICKS(1000)); // 等待写入完成
+
+        printf("[OTA] Resetting system...\r\n");
+        vTaskDelay(pdMS_TO_TICKS(500));
+
+        // 系统复位
+        NVIC_SystemReset();
       }
-
-      xSemaphoreGive(g_w25q_mutex);
-
-      // 写入固件长度
-      printf("[OTA] Writing firmware length: %lu bytes\r\n", g_firmware_size);
-      xSemaphoreTake(g_w25q_mutex, portMAX_DELAY);
-      W25Q128_PageProgram(OTA_FW_LENGTH_ADDRESS, (uint8_t *)&g_firmware_size,
-                          4);
-      xSemaphoreGive(g_w25q_mutex);
-
-      vTaskDelay(pdMS_TO_TICKS(1000)); // 等待写入完成
-
-      printf("[OTA] Resetting system...\r\n");
-      vTaskDelay(pdMS_TO_TICKS(500));
-
-      // 系统复位
-      NVIC_SystemReset();
       break;
+
 
     default:
       g_ota_state = OTA_STATE_IDLE;

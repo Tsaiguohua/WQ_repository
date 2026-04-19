@@ -1,3 +1,18 @@
+/**
+ * @file    AcqTask.c
+ * @author  Antigravity Refactor Team
+ * @brief   水质数据采集任务 (Abstraction Layer Based)
+ * @version 2.0 (Architecture Upgrade B)
+ * @date    2026-04-19
+ *
+ * @details 
+ *   本任务负责周期性地调度传感器采集流程。
+ *   - 硬件抽象：通过 WQInterface.Channel[] 轮询传感器，不直接调用底层驱动。
+ *   - 自动预热：已预留 power_on/power_off 接口用于未来低功耗模式。
+ *   - 数据同步：采集到的结果通过互斥锁保护，更新至全局 snapshot。
+ *   - 帧间间隔：严格遵守 RS485 总线 100ms 帧间静默要求（9600bps 标准）。
+ */
+
 #include "AcqTask.h"
 #include "TasksInit.h"
 #include "FreeRTOS.h"
@@ -255,8 +270,23 @@ static void collect_all_water_sensors(acquisition_data_t *data) {
     for (int i = 0; i < 3; i++) {
         // 如果通道开关是开的，且这个通道在自检时已经绑定了"读函数"
         if (WQInterface.Channel[i].connected == 1 && WQInterface.Channel[i].Read != NULL) {
-            // 直接执行！不需要问你是谁，不需要 switch-case
-            WQInterface.Channel[i].Read(data);
+
+            printf("[Acq] Ch%d (%s) reading...\r\n", i + 1, WQInterface.Channel[i].name);
+
+            /* ★ 低功耗预留：采前上电（暂注释，低功耗模式时取消注释）
+             * if (WQInterface.Channel[i].power_on)
+             *     WQInterface.Channel[i].power_on();
+             */
+
+            uint8_t ok = WQInterface.Channel[i].Read(data);
+
+            /* ★ 低功耗预留：采后断电（暂注释，低功耗模式时取消注释）
+             * if (WQInterface.Channel[i].power_off)
+             *     WQInterface.Channel[i].power_off();
+             */
+
+            printf("[Acq] Ch%d (%s): %s\r\n", i + 1, WQInterface.Channel[i].name,
+                   ok ? "OK" : "FAIL");
 
             /* ⚠️ RS485帧间间隔：三个传感器共享同一条半双工总线，
              * 查完一个传感器后必须等总线完全静默，才能查下一个。
