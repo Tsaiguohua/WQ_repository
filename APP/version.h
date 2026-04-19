@@ -4,18 +4,23 @@
 #include <stdint.h>  
 /**
  * @file    version.h
- * @brief   APP版本管理头文件（双APP架构）
- * @details 定义固件版本号和编译目标，支持APP1/APP2编译配置
+ * @author  Antigravity Refactor Team
+ * @brief   APP 版本管理头文件（双 APP 架构 & 重构版）
+ * @version 2.0
+ * @date    2026-04-19
+ *
+ * @details 定义固件版本号和编译目标，支持 APP1/APP2 编译配置。
+ *          本项目已通过 Architecture Upgrade 重构，具备高度模块化的接口层。
  *
  * 使用方法：
- *   1. APP1编译配置：
- *      - MDK工程设置 → Target Options → C/C++ → Preprocessor Symbols
+ *   1. APP1 编译配置：
+ *      - MDK 工程设置 → Target Options → C/C++ → Preprocessor Symbols
  *      - Define: APP_TARGET=1 APP_VERSION_MAJOR=1 APP_VERSION_MINOR=0
- *      - 链接脚本：选择stm32f407_app1.sct
+ *      - 链接脚本：选择 stm32f407_app1.sct
  *
- *   2. APP2编译配置：
+ *   2. APP2 编译配置：
  *      - Define: APP_TARGET=2 APP_VERSION_MAJOR=2 APP_VERSION_MINOR=0
- *      - 链接脚本：选择stm32f407_app2.sct
+ *      - 链接脚本：选择 stm32f407_app2.sct
  */
 
 // ========== 版本号定义（通过编译器宏定义）==========
