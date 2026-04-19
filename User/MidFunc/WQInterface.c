@@ -1,3 +1,18 @@
+/**
+ * @file    WQInterface.c
+ * @author  Antigravity Refactor Team
+ * @brief   水质监测系统统一接口单例实现层
+ * @version 2.0 (Architecture Upgrade B)
+ * @date    2026-04-19
+ *
+ * @details 
+ *   本文件实现了 WQInterface.h 中定义的单例对象。核心逻辑包括：
+ *   1. 传感器函数指针映射表 (_sensor_map)：将传感器类型与底层驱动函数绑定。
+ *   2. 通道绑定逻辑 (WQ_Interface_Bind)：支持动态发现并挂载传感器 ops。
+ *   3. 线程安全保护：实现了 UART4 发送互斥锁，确保多任务并发下串口数据不交错。
+ *   4. 资源初始化 (WQ_Interface_Init)：在任务运行前预创建系统级同步对象。
+ */
+
 #include "WQInterface.h"
 #include "FreeRTOS.h"
 #include "self_exam.h"
@@ -23,9 +38,29 @@
 #include "task.h"
 #include "semphr.h"
 #include <stdio.h>
+#include <string.h> 
 
 /* UART4 专用的发送互斥锁，防止抢占导致串口数据交错 */
 static SemaphoreHandle_t g_uart4_tx_mutex = NULL;
+
+/**
+ * @brief  WQInterface 初始化函数
+ * @note   必须在 User_Tasks_Init() 最开头、任何任务创建之前调用。
+ *         确保 g_uart4_tx_mutex 只在单一时机、由主流程创建，
+ *         彻底避免 UpLoad_Task 与 Heartbeat_Task 同时首次调用
+ *         WQ_UART4_Send() 时发生的双重创建竞态条件（内存泄漏 + 互斥保护失效）。
+ */
+void WQ_Interface_Init(void) {
+    if (g_uart4_tx_mutex == NULL) {
+        g_uart4_tx_mutex = xSemaphoreCreateMutex();
+        if (g_uart4_tx_mutex == NULL) {
+            /* 内存不足，互斥锁创建失败，打印告警（发送时会跳过锁保护） */
+            printf("[WQInterface] ERROR: g_uart4_tx_mutex create failed!\r\n");
+        } else {
+            printf("[WQInterface] g_uart4_tx_mutex created OK.\r\n");
+        }
+    }
+}
 
 
 /* =========================================================================
@@ -193,12 +228,7 @@ uint8_t WQ_UART4_Send(const char *str)
 	if(str == NULL)
 		return 0;
 
-    /* 首次使用前动态创建互斥锁 */
-    if (g_uart4_tx_mutex == NULL) {
-        g_uart4_tx_mutex = xSemaphoreCreateMutex();
-    }
-
-    /* 获取发送锁，防止被其他任务抢占插嘴 */
+    /* 获取发送锁，防止被其他任务抢占插嘴（锁已在 WQ_Interface_Init() 中提前创建） */
     if (g_uart4_tx_mutex != NULL) {
         xSemaphoreTake(g_uart4_tx_mutex, portMAX_DELAY);
     }
@@ -462,33 +492,46 @@ WQ_InterfaceTypeDef WQInterface = {
 
 // 传感器类型 → wrapper 函数的查找表
 typedef struct {
-    sensor_type_t type;
-    uint8_t (*read_fn)(void *out);
+    sensor_type_t  type;
+    const char    *name;              // 传感器名称，绑定时赋给 Channel.name
+    uint8_t      (*read_fn)(void *out);
+    void         (*power_on)(void);   // 上电预热（暂为 NULL，低功耗时填入）
+    void         (*power_off)(void);  // 下电（暂为 NULL，低功耗时填入）
 } _SensorMap_t;
 
 static const _SensorMap_t _sensor_map[] = {
-    { SENSOR_TYPE_COD,   WQ_COD_GetData   },  
-    { SENSOR_TYPE_Y4000, WQ_Y4000_GetData },
-    { SENSOR_TYPE_PH,    WQ_PH_GetData    },
-    { SENSOR_TYPE_DO,    WQ_DO_GetData    },
-    { SENSOR_TYPE_SAL,   WQ_SAL_GetData   },
-    { SENSOR_TYPE_CDOM,  WQ_CDOM_GetData  },
-    { SENSOR_TYPE_CHL,   WQ_CHL_GetData   },
+    /*  type                 name      read_fn              power_on  power_off */
+    { SENSOR_TYPE_COD,   "COD",   WQ_COD_GetData,   NULL, NULL },
+    { SENSOR_TYPE_Y4000, "Y4000", WQ_Y4000_GetData, NULL, NULL },
+    { SENSOR_TYPE_PH,    "PH",    WQ_PH_GetData,    NULL, NULL },
+    { SENSOR_TYPE_DO,    "DO",    WQ_DO_GetData,    NULL, NULL },
+    { SENSOR_TYPE_SAL,   "SAL",   WQ_SAL_GetData,   NULL, NULL },
+    { SENSOR_TYPE_CDOM,  "CDOM",  WQ_CDOM_GetData,  NULL, NULL },
+    { SENSOR_TYPE_CHL,   "CHL",   WQ_CHL_GetData,   NULL, NULL },
 };
 
 void WQ_Interface_Bind(void) {
     for (int i = 0; i < 3; i++) {
         sensor_type_t current_type = WQInterface.Channel[i].type;
+
+        /* 先清空本通道的所有字段 */
         WQInterface.Channel[i].channel   = i + 1;
-        WQInterface.Channel[i].Read      = NULL;  // 先清空
+        WQInterface.Channel[i].Read      = NULL;
+        WQInterface.Channel[i].name      = "NONE";
+        WQInterface.Channel[i].power_on  = NULL;
+        WQInterface.Channel[i].power_off = NULL;
         WQInterface.Channel[i].connected = 0;
-        
+
         if (current_type == SENSOR_TYPE_NONE) continue;
 
-        for (int j = 0; j < sizeof(_sensor_map)/sizeof(_sensor_map[0]); j++) {
+        for (int j = 0; j < (int)(sizeof(_sensor_map)/sizeof(_sensor_map[0])); j++) {
             if (_sensor_map[j].type == current_type) {
                 WQInterface.Channel[i].Read      = _sensor_map[j].read_fn;
+                WQInterface.Channel[i].name      = _sensor_map[j].name;
+                WQInterface.Channel[i].power_on  = _sensor_map[j].power_on;
+                WQInterface.Channel[i].power_off = _sensor_map[j].power_off;
                 WQInterface.Channel[i].connected = 1;
+                printf("[Bind] Channel %d -> %s\r\n", i + 1, _sensor_map[j].name);
                 break;
             }
         }

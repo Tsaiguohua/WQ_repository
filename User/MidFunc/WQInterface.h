@@ -40,11 +40,13 @@ typedef enum {
 
 // ===== 水质传感器接口=====
 typedef struct {
-    uint8_t  connected;        // 是否连接
-    uint8_t  channel;          // 通道号 1/2/3
-    uint8_t  type;             // sensor_type_t
-    uint8_t  (*Init)(void);
-    uint8_t  (*Read)(void *out_data);  // 读数据，输出到结构体
+    uint8_t     connected;              // 是否连接
+    uint8_t     channel;               // 通道号 1/2/3
+    sensor_type_t     type;                  // sensor_type_t
+    const char *name;                  // 传感器名称（调试日志用，如 "COD"/"Y4000"）
+    uint8_t   (*Read)(void *out_data); // 读取数据，输出到采集结构体
+    void      (*power_on)(void);       // 上电预热（低功耗模式用，暂填 NULL）
+    void      (*power_off)(void);      // 下电（低功耗模式用，暂填 NULL）
 } WQ_Channel_InterfaceTypeDef;
 
 //===== GPS接口 =====
@@ -124,6 +126,7 @@ typedef struct {
 
 extern WQ_InterfaceTypeDef WQInterface;
     
+void WQ_Interface_Init(void);  /* 系统启动时调用：提前创建 UART4 互斥锁，防止并发懒创建 Bug */
 void WQ_Interface_Bind(void);  
 
 #endif
